@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   end
 
   resources :todos, only: [] do
+    patch :toggle, on: :member
     resources :subtasks, only: [:create, :update, :destroy]
   end
 

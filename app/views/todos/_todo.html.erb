@@ -1,0 +1,35 @@
+<div id="<%= dom_id(todo) %>" class="bg-white rounded-lg shadow-sm p-4 flex items-start gap-3">
+  <%= form_with model: todo, url: toggle_todo_path(todo), method: :patch, class: "mt-0.5", data: { turbo_stream: true } do |f| %>
+    <%= f.check_box :done, { checked: todo.done, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer", onchange: "this.form.requestSubmit()" }, "true", "false" %>
+  <% end %>
+
+  <div class="flex-1 min-w-0">
+    <p class="text-sm <%= todo.done ? 'line-through text-gray-400' : 'text-gray-900' %>">
+      <%= todo.title %>
+    </p>
+    <% if todo.description.present? %>
+      <p class="text-xs text-gray-500 mt-1"><%= todo.description %></p>
+    <% end %>
+
+    <%# Subtasks %>
+    <% if todo.subtasks.any? %>
+      <div class="mt-2 ml-1 space-y-1">
+        <% todo.subtasks.each do |subtask| %>
+          <div class="flex items-center gap-2 text-xs text-gray-600">
+            <%= form_with model: [todo, subtask], method: :patch, class: "inline" do |f| %>
+              <%= f.check_box :done, { checked: subtask.done, class: "h-3 w-3 text-blue-500 border-gray-300 rounded cursor-pointer", onchange: "this.form.requestSubmit()" }, "true", "false" %>
+            <% end %>
+            <span class="<%= subtask.done ? 'line-through text-gray-400' : '' %>"><%= subtask.title %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# Add subtask form %>
+    <div class="mt-2">
+      <%= form_with model: [todo, todo.subtasks.new], local: true, class: "flex gap-1" do |f| %>
+        <%= f.text_field :title, placeholder: "Add subtask...", class: "text-xs rounded border-gray-200 px-2 py-1 w-48 focus:border-blue-500 focus:ring-blue-500" %>
+      <% end %>
+    </div>
+  </div>
+</div>

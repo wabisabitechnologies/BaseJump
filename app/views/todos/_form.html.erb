@@ -1,0 +1,5 @@
+<%= form_with model: [todo_list, todo], id: "new-todo-form", class: "flex gap-2" do |f| %>
+  <%= f.hidden_field :todo_list_id, value: todo_list&.id %>
+  <%= f.text_field :title, placeholder: "Add a new todo...", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
+  <%= f.submit "Add", class: "inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
+<% end %>
