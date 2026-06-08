@@ -1,46 +1,26 @@
-# == Schema Information
-#
-# Table name: projects
-#
-#  id           :integer          not null, primary key
-#  name         :string           not null
-#  description  :string
-#  project_type :string           not null
-#  admin_id     :integer          not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
-
 class Project < ApplicationRecord
-  validates :name, :project_type, :admin_id, presence: true
+  normalizes :name, :description, with: ->(s) { s&.strip }
 
-  has_many :project_users,
-    primary_key: :id,
-    foreign_key: :project_id,
-    class_name: :UserProject
+  PROJECT_TYPES = %w[company team project].freeze
 
-  has_many :users,
-    through: :project_users,
-    source: :user
+  validates :name, :project_type, presence: true
+  validates :project_type, inclusion: { in: PROJECT_TYPES }
 
-  belongs_to :admin,
-    primary_key: :id,
-    foreign_key: :admin_id,
-    class_name: :User,
-    inverse_of: :adminned_projects
+  belongs_to :admin, class_name: :User, optional: true
+  belongs_to :company, optional: true
+  has_many :user_projects, dependent: :destroy
+  has_many :users, through: :user_projects
+  has_many :todo_lists, dependent: :destroy
+  has_many :todos, through: :todo_lists
+  has_many :events, dependent: :destroy
+  has_many :messages, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
-  has_many :todo_lists,
-    primary_key: :id,
-    foreign_key: :project_id,
-    class_name: :TodoList
-
-  has_many :todos,
-    through: :todo_lists,
-    source: :todos
+  scope :company_hq, -> { where(project_type: 'company') }
+  scope :teams, -> { where(project_type: 'team') }
+  scope :projects_only, -> { where(project_type: 'project') }
 
   def add_user(user)
-    up = UserProject.create(user_id: user.id, project_id: self.id)
-    up.save
+    user_projects.create(user: user)
   end
-
 end

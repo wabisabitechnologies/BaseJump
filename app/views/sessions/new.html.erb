@@ -1,0 +1,13 @@
+<%# Login form - basic %>
+<!DOCTYPE html>
+<html>
+<head><title>Login</title></head>
+<body>
+<h1>Log in</h1>
+<form action="/session" method="post">
+  <input type="text" name="session[username_or_email]" />
+  <input type="password" name="session[password]" />
+  <button type="submit">Login</button>
+</form>
+</body>
+</html>

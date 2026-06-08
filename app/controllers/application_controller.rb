@@ -1,48 +1,41 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
-  helper_method :current_user, :logged_in?, :current_company, :current_projects
+  include ActionView::RecordIdentifier
+
+  protect_from_forgery with: :null_session
+  helper_method :current_user, :logged_in?, :current_company
+
+  private
 
   def current_user
-    User.find_by(session_token: session[:session_token])
+    @current_user ||= User.find_by(session_token: session[:session_token])
   end
 
-
   def logged_in?
-    !!current_user
+    current_user.present?
   end
 
   def current_company
-    return session[:business] = current_user.business if logged_in?
-    nil
+    @current_company ||= current_user&.company
   end
 
-  def current_projects
-    return session[:projects] = current_user.projects if logged_in?
-    nil
+  def require_login
+    unless logged_in?
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: 'Please log in to continue' }
+        format.turbo_stream { redirect_to root_path, alert: 'Please log in to continue' }
+      end
+    end
   end
 
   def login!(user)
     session[:session_token] = user.session_token
-    session[:business] = user.business
-    session[:projects] = user.projects
+    @current_user = user
+    @current_company = user.company
   end
 
   def logout!
-    current_user.reset_session_token!
-    session[:session_token] = nil
+    session.delete(:session_token)
+    @current_user = nil
+    @current_company = nil
   end
-
-  def user_params
-    params.require(:user).permit(:name,
-      :username,
-      :email,
-      :password,
-      :avatar_url,
-      :company,
-      :job_title,
-      :admin,
-      :owner
-      )
-  end
-
 end

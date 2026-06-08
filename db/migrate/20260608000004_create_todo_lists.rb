@@ -1,0 +1,11 @@
+class CreateTodoLists < ActiveRecord::Migration[8.0]
+  def change
+    create_table :todo_lists do |t|
+      t.string :title, null: false
+      t.text :description
+      t.references :author, null: true, foreign_key: { to_table: :users }
+      t.references :project, null: false, foreign_key: true
+      t.timestamps
+    end
+  end
+end

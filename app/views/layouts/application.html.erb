@@ -2,34 +2,14 @@
 <html>
   <head>
     <title>BaseJump</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
-
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
-
-    <script type="text/javascript">
-      <% if current_user %>
-      window.currentUser = <%= render('api/users/user.json.jbuilder', user: current_user).html_safe %>
-      window.currentCompany = <%= render('api/companies/company.json.jbuilder', company: current_company).html_safe %>
-      window.currentProjects = <%= render('api/projects/index.json.jbuilder', projects: current_projects).html_safe %>
-      <% end %>
-    </script>
-
-
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5735J3M');</script>
-    <!-- End Google Tag Manager -->
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5735J3M"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+  <body class="bg-gray-100">
     <%= yield %>
   </body>
 </html>

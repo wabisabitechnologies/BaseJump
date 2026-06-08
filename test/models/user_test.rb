@@ -1,26 +1,72 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id              :integer          not null, primary key
-#  name            :string           not null
-#  username        :string           not null
-#  email           :string           not null
-#  avatar_url      :string
-#  job_title       :string
-#  admin           :boolean
-#  owner           :boolean
-#  password_digest :string           not null
-#  session_token   :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  company_id      :integer          not null
-#
-
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  def setup
+    @company = Company.create!(name: 'Test Company')
+  end
+
+  test 'valid user' do
+    user = User.new(
+      name: 'Test User',
+      username: 'testuser',
+      email: 'test@example.com',
+      password: 'password123',
+      company: @company
+    )
+    assert user.valid?
+  end
+
+  test 'requires email' do
+    user = User.new(
+      name: 'Test User',
+      username: 'testuser',
+      password: 'password123',
+      company: @company
+    )
+    assert_not user.valid?
+  end
+
+  test 'requires username' do
+    user = User.new(
+      name: 'Test User',
+      email: 'test@example.com',
+      password: 'password123',
+      company: @company
+    )
+    assert_not user.valid?
+  end
+
+  test 'requires company' do
+    user = User.new(
+      name: 'Test User',
+      username: 'testuser2',
+      email: 'test2@example.com',
+      password: 'password123'
+    )
+    assert_not user.valid?
+  end
+
+  test 'password minimum length' do
+    user = User.new(
+      name: 'Test User',
+      username: 'testuser3',
+      email: 'test3@example.com',
+      password: '12345',
+      company: @company
+    )
+    assert_not user.valid?
+  end
+
+  test 'normalizes email and username' do
+    user = User.new(
+      name: 'Test User',
+      username: ' TESTUSER ',
+      email: ' TEST@EXAMPLE.COM ',
+      password: 'password123',
+      company: @company
+    )
+    user.valid?
+    assert_equal 'test@example.com', user.email
+    assert_equal 'testuser', user.username
+  end
 end

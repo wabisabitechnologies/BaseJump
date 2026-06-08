@@ -1,26 +1,11 @@
-# == Schema Information
-#
-# Table name: messages
-#
-#  id           :integer          not null, primary key
-#  title        :string           not null
-#  body         :text             not null
-#  message_type :string
-#  author_id    :integer          not null
-#  project_id   :integer          not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
-
 class Message < ApplicationRecord
+  normalizes :title, :body, with: ->(s) { s&.strip }
 
-  validates :title, :body, :author_id, :project_id, presence: true
+  validates :title, :project, presence: true
+  validates :body, presence: true
 
-  belongs_to :project
-
-  belongs_to :author,
-    primary_key: :id,
-    foreign_key: :author_id,
-    class_name: :User
-
+  belongs_to :author, class_name: :User, optional: true
+  belongs_to :project, optional: true
+  has_many :comments, as: :commentable, dependent: :destroy
+  has_many :references, dependent: :destroy, class_name: 'Reference'
 end

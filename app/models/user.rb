@@ -1,107 +1,50 @@
-require 'faker'
-# == Schema Information
-#
-# Table name: users
-#
-#  id              :integer          not null, primary key
-#  name            :string           not null
-#  username        :string           not null
-#  email           :string           not null
-#  avatar_url      :string
-#  job_title       :string
-#  admin           :boolean
-#  owner           :boolean
-#  password_digest :string           not null
-#  session_token   :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  company_id      :integer          not null
-#
-
 class User < ApplicationRecord
+  has_secure_password
 
-  validates :name, :username, :email, :company_id, :password_digest, :session_token, presence: true
-  validates :username, :session_token, uniqueness: true
-  validates :password, length: { minimum: 6, allow_nil: true}
-  before_validation :ensure_session_token, :ensure_avatar
+  normalizes :email, :username, with: ->(value) { value.strip.downcase }
 
-  belongs_to :business,
-    primary_key: :id,
-    foreign_key: :company_id,
-    class_name: :Company
+  validates :name, :username, :email, :company, presence: true
+  validates :username, uniqueness: true
+  validates :email, uniqueness: true
+  validates :password, length: { minimum: 6 }, allow_nil: true
 
-  has_many :user_projects,
-    primary_key: :id,
-    foreign_key: :user_id,
-    class_name: :UserProject
+  belongs_to :company, optional: true
+  has_many :user_projects, dependent: :destroy
+  has_many :projects, through: :user_projects
+  has_many :adminned_projects, class_name: :Project, foreign_key: :admin_id
+  has_many :authored_todo_lists, class_name: :TodoList, foreign_key: :author_id
+  has_many :authored_todos, class_name: :Todo, foreign_key: :author_id
+  has_many :user_todos, dependent: :destroy
+  has_many :assigned_todos, through: :user_todos, source: :todo
+  has_many :authored_messages, class_name: :Message, foreign_key: :author_id
+  has_many :authored_events, class_name: :Event, foreign_key: :author_id
+  has_many :comments, class_name: :Comment, foreign_key: :author_id
 
-  has_many :projects,
-    through: :user_projects,
-    source: :project
+  attr_accessor :company_name
 
-  has_many :adminned_projects,
-    primary_key: :id,
-    foreign_key: :admin_id,
-    class_name: :Project,
-    inverse_of: :admin
-
-  has_many :authored_todo_lists,
-    primary_key: :id,
-    foreign_key: :author_id,
-    class_name: :TodoList
-
-  has_many :user_todos,
-    primary_key: :id,
-    foreign_key: :user_id,
-    class_name: :UserTodo
-
-  has_many :assignments,
-    through: :user_todos,
-    source: :assignment
-
-  attr_reader :password, :company
+  before_create :ensure_session_token, :ensure_avatar
 
   def self.find_by_username_or_email(login_cred)
-    user = User.find_by(username: login_cred) || User.find_by(email: login_cred)
+    find_by(username: login_cred) || find_by(email: login_cred)
   end
 
   def self.find_by_credentials(login_cred, password)
-    user = User.find_by_username_or_email(login_cred)
-    user && user.is_password?(password) ? user : nil
-  end
-
-  def password=(password)
-    @password = password
-    self.password_digest = BCrypt::Password.create(password)
-  end
-
-  def company=(company)
-    @company = Company.find_by_company(company) || Company.create(name: company)
-    self.company_id = @company.id
-  end
-
-
-  def is_password?(password)
-    BCrypt::Password.new(self.password_digest).is_password?(password)
+    user = find_by_username_or_email(login_cred)
+    user&.authenticate(password)
   end
 
   def reset_session_token!
-    self.session_token = SecureRandom.urlsafe_base64(16)
-    self.save
-    self.session_token
+    update(session_token: SecureRandom.urlsafe_base64(16))
   end
 
   private
 
   def ensure_session_token
-    self.session_token ||= reset_session_token!
+    self.session_token ||= SecureRandom.urlsafe_base64(16)
   end
 
   def ensure_avatar
-    if self.name
-      img_url = Faker::Placeholdit.image("500x500", 'jpg', Faker::Color.hex_color[1..-1], 'fff', name[0])
-      self.avatar_url ||= img_url
-    end
+    return if avatar_url.present?
+    self.avatar_url = "https://placehold.co/500x500?text=#{name.first}&font=roboto"
   end
-
 end

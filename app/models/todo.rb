@@ -1,45 +1,26 @@
-# == Schema Information
-#
-# Table name: todos
-#
-#  id           :integer          not null, primary key
-#  title        :string           not null
-#  description  :text
-#  author_id    :integer          not null
-#  done         :boolean          default(FALSE), not null
-#  todo_list_id :integer          not null
-#  due_date     :datetime
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
-
 class Todo < ApplicationRecord
+  normalizes :title, with: ->(title) { title.strip }
 
-  validates :title, :author_id, :todo_list_id, presence: true
-  before_validation :ensure_done_status
+  validates :title, :author_id, presence: true
+  validates :done, inclusion: { in: [true, false] }
 
-  belongs_to :todo_list,
-    primary_key: :id,
-    foreign_key: :todo_list_id,
-    class_name: :TodoList
+  belongs_to :author, class_name: :User, optional: true
+  belongs_to :todo_list, class_name: :TodoList, optional: true
 
-  has_many :user_todos,
-    primary_key: :id,
-    foreign_key: :todo_id,
-    class_name: :UserTodo
+  has_many :user_todos, dependent: :destroy
+  has_many :assignees, through: :user_todos, source: :user
+  has_many :subtasks, dependent: :destroy, foreign_key: :parent_todo_id, inverse_of: :parent_todo
+  has_one :project, through: :todo_list
 
-  has_many :assignees,
-    through: :user_todos,
-    source: :assignee
+  scope :loose, -> { where(todo_list_id: nil) }
+  scope :done, -> { where(done: true) }
+  scope :not_done, -> { where(done: false) }
 
-    def toggle_status
-      self.done = !self.done
-      self.save
-    end
+  def toggle_status
+    update(done: !done)
+  end
 
-  def ensure_done_status
-    if self.done.nil?
-      self.done = false
-    end
+  def loose?
+    todo_list_id.nil?
   end
 end

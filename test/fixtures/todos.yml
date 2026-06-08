@@ -1,26 +1,10 @@
-# == Schema Information
-#
-# Table name: todos
-#
-#  id           :integer          not null, primary key
-#  title        :string           not null
-#  description  :text
-#  author_id    :integer          not null
-#  done         :boolean          default(FALSE), not null
-#  todo_list_id :integer          not null
-#  due_date     :datetime
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
+one:
+  title: "First Todo"
+  author: user_1
+  todo_list: todo_list_one
 
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-# This model initially had no columns defined. If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+two:
+  title: "Second Todo"
+  author: user_1
+  todo_list: todo_list_one
+  done: true
