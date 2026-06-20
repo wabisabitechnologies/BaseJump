@@ -1,13 +1,24 @@
-<%# Login form - basic %>
-<!DOCTYPE html>
-<html>
-<head><title>Login</title></head>
-<body>
-<h1>Log in</h1>
-<form action="/session" method="post">
-  <input type="text" name="session[username_or_email]" />
-  <input type="password" name="session[password]" />
-  <button type="submit">Login</button>
-</form>
-</body>
-</html>
+<div class="form-page">
+  <a href="/">
+    <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Basecamp" />
+  </a>
+
+  <%= form_tag session_path, method: :post, class: "session-form" do %>
+    <div class="formHeader">
+      <h3>Happy <%= Date.today.strftime("%A") %>!</h3>
+      <p>Just enter your email address or username and we'll get you right into Basejump</p>
+    </div>
+
+    <%= label_tag "session[username_or_email]", "Username" %>
+    <%= text_field_tag "session[username_or_email]", nil, placeholder: "johndoe" %>
+    <%= label_tag :password, "Password" %>
+    <%= password_field_tag "session[password]", nil %>
+    <br>
+    <%= submit_tag "Login", class: "btn btn-submit" %>
+    <%= submit_tag "Demo Login", class: "btn btn-submit" %>
+  <% end %>
+
+  <span>
+    Don't have an account? <a href="/users/new">Sign up here!</a>
+  </span>
+</div>

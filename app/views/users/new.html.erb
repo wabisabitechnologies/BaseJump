@@ -1,31 +1,32 @@
-<div class="signup-page">
-  <h1>Sign up for BaseJump</h1>
+<div class="form-page">
+  <a href="/">
+    <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Basecamp" />
+  </a>
 
-  <form action="/users" method="post">
-    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-
-    <div>
-      <label for="user_name">Full Name</label>
-      <input type="text" name="user[name]" id="user_name" required>
+  <%= form_for @user, html: { class: "session-form sign-up-form" } do |f| %>
+    <div class="formHeader">
+      <span class="signup">Sign up for Basejump</span>
+      <p class="barred-span">Type your email address</p>
     </div>
 
-    <div>
-      <label for="user_username">Username</label>
-      <input type="text" name="user[username]" id="user_username" required>
+    <div class="signup-fields">
+      <%= f.label :name %>
+      <%= f.text_field :name, placeholder: "John Doe" %>
+      <%= f.label :email %>
+      <%= f.email_field :email, placeholder: "john@doe.com" %>
     </div>
 
-    <div>
-      <label for="user_email">Email</label>
-      <input type="email" name="user[email]" id="user_email" required>
-    </div>
+    <%= f.label :username %>
+    <%= f.text_field :username, placeholder: "johndoe" %>
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+    <%= f.label :password_confirmation, "Confirm Password" %>
+    <%= f.password_field :password_confirmation %>
+    <br>
+    <%= f.submit "Sign Up", class: "btn btn-submit" %>
+  <% end %>
 
-    <div>
-      <label for="user_password">Password</label>
-      <input type="password" name="user[password]" id="user_password" required>
-    </div>
-
-    <button type="submit">Sign up</button>
-  </form>
-
-  <p>Already have an account? <a href="/session/new">Log in</a></p>
+  <span>
+    Already have an account? <a href="/session/new">Sign in here!</a>
+  </span>
 </div>

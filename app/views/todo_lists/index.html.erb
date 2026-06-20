@@ -1,40 +1,49 @@
-<div class="min-h-screen bg-gray-100">
-  <nav class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex items-center">
-          <%= link_to "← Back to #{@project.name}", project_path(@project), class: "text-sm text-blue-600 hover:text-blue-800 mr-4" %>
-          <h1 class="text-xl font-bold text-gray-900">Todo Lists</h1>
-        </div>
-        <div class="flex items-center">
-          <span class="text-sm text-gray-700 mr-4"><%= current_user.name %></span>
-          <%= button_to "Log out", session_path, method: :delete, class: "text-sm text-gray-500 hover:text-gray-700" %>
-        </div>
-      </div>
+<div class="main-app">
+  <nav class="app-nav">
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="<%= project_path(@project) %>" class="logo" style="margin-left: 5px;">
+        <span>Home</span>
+      </a>
+    </div>
+    <div>
+      <span style="font-size: 13px; color: #555;"><%= current_user.name %></span>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
     </div>
   </nav>
 
-  <main class="max-w-4xl mx-auto py-6 px-4">
-    <div class="mt-6">
-      <%= form_with model: [@project, @project.todo_lists.new], local: true, class: "flex gap-2" do |f| %>
-        <%= f.text_field :title, placeholder: "New todo list...", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
-        <%= f.text_area :description, placeholder: "Description (optional)", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
-        <%= f.submit "Create List", class: "inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
-      <% end %>
-    </div>
+  <div class="tool-page">
+    <header>
+      <span><%= link_to "← #{@project.name}", project_path(@project) %></span>
+    </header>
 
-    <div class="space-y-3 mt-6">
-      <% @todo_lists.each do |list| %>
-        <div class="bg-white rounded-lg shadow p-4">
-          <%= link_to [list.project, list], class: "block" do %>
-            <h3 class="text-lg font-semibold text-blue-600 hover:text-blue-800"><%= list.title %></h3>
+    <div class="main-tool">
+      <h1>Todo Lists</h1>
+
+      <div class="tool-form todolist">
+        <%= form_with model: [@project, @project.todo_lists.new], local: true do |f| %>
+          <div class="input-fields">
+            <%= f.text_field :title, placeholder: "New todo list..." %>
+            <%= f.text_area :description, placeholder: "Description (optional)" %>
+          </div>
+          <div class="submit-buttons">
+            <%= f.submit "Create List", class: "btn btn-submit" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="todolists">
+        <% @todo_lists.each do |list| %>
+          <div class="todolist-item">
+            <h1><%= link_to list.title, [list.project, list] %> <span>(<%= pluralize(list.todos.count, "todo") %>)</span></h1>
             <% if list.description.present? %>
-              <p class="text-sm text-gray-500 mt-1"><%= list.description %></p>
+              <p style="font-size: 13px; color: #666;"><%= list.description %></p>
             <% end %>
-            <p class="text-xs text-gray-400 mt-2"><%= pluralize(list.todos.count, "todo") %></p>
-          <% end %>
-        </div>
-      <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
-  </main>
+  </div>
 </div>
