@@ -24,20 +24,20 @@ export const fetchProjectTodoLists = id => dispatch => {
     then(res => {
       return dispatch(receiveTodoLists(res.todoLists))
     }).
-    fail(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
 }
 export const fetchTodoList = id => dispatch => {
   return APIUtil.fetchTodoList(id).
     then(res => dispatch(receiveTodoList(res.todoList))).
-    fail(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
 }
 export const createTodoList = todo_list => dispatch => {
   return APIUtil.createTodoList(todo_list).
     then(res => dispatch(receiveTodoList(res.todoList))).
-    fail(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
 }
 export const updateTodoList = todo_list => dispatch => {
   return APIUtil.updateTodoList(todo_list).
     then(res => dispatch(receiveTodoList(res.todoList))).
-    fail(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoListErrors(res.responseJSON.errors)))
 }

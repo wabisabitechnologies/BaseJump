@@ -1,0 +1,28 @@
+{
+  "name": "basejump",
+  "private": true,
+  "dependencies": {
+    "@hotwired/turbo-rails": "^8.0.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.1",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.1",
+    "storybook": "^10.4.5",
+    "@storybook/react-webpack5": "^10.4.5",
+    "@storybook/addon-webpack5-compiler-swc": "^4.0.3",
+    "@storybook/addon-a11y": "^10.4.5",
+    "@storybook/addon-docs": "^10.4.5",
+    "@storybook/addon-onboarding": "^10.4.5",
+    "prop-types": "^15.8.1"
+  }
+}

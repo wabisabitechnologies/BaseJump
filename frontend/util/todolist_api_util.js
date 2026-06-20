@@ -1,27 +1,31 @@
-export const fetchProjectTodoLists = id => {
-  return $.ajax({
-    url: `api/projects/${id}/todolists`
-  })
-}
+export const fetchProjectTodoLists = async (id) => {
+  const res = await fetch(`/api/projects/${id}/todolists`);
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const fetchTodoList = id => {
-  return $.ajax({
-    url: `api/todolists/${id}`
-  })
-}
+export const fetchTodoList = async (id) => {
+  const res = await fetch(`/api/todolists/${id}`);
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const createTodoList = todo_list => {
-  return $.ajax({
-    method: 'post',
-    url: 'api/todolists',
-    data: { todo_list }
-  })
-}
+export const createTodoList = async (todo_list) => {
+  const res = await fetch('/api/todolists', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ todo_list }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const updateTodoList = todo_list => {
-  return $.ajax({
-    method: 'post',
-    url: `api/todolists/${todo_list.id}`,
-    data: { todo_list }
-  })
-}
+export const updateTodoList = async (todo_list) => {
+  const res = await fetch(`/api/todolists/${todo_list.id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ todo_list }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};

@@ -56,7 +56,7 @@ class MessageForm extends React.Component {
     e.preventDefault()
     this.props.processMessage(this.state.message).
       then(res => this.props.history.push(`/${this.props.currentUser.id}/projects/${this.props.project.id}/messages`)).
-      fail(res => this.handleErrors(res.responseJSON.errors))
+      catch(res => this.handleErrors(res.responseJSON.errors))
   }
 
   handleCancel(e){
@@ -88,19 +88,17 @@ class MessageForm extends React.Component {
 
   switchProjectType(id) {
     return () => {
-      $('.message-types .btn').removeClass('btn-submit').addClass('btn-normal')
-      $(id).removeClass('btn-normal').addClass('btn-submit')
       const message = Object.assign({}, this.state.message, { message_type: id.slice(1) })
       this.setState({ message })
     }
   }
 
-
-
   render(){
     if(!this.props.project || this.state.loading){
       return (<Loading />)
     } else {
+      const { message } = this.state
+      const messageTypes = ['announcement', 'fyi', 'heartbeat', 'pitch', 'question', 'something']
       return (
         <div className='tool-page'>
           <header>
@@ -117,18 +115,20 @@ class MessageForm extends React.Component {
             <div className='message-form'>
               <h2>What are you posting?</h2>
               <div className='message-types'>
-                <a onClick={this.switchProjectType('#announcement')} id='announcement' className='btn btn-normal'>Announcement</a>
-                <a onClick={this.switchProjectType('#fyi')} id='fyi' className='btn btn-normal'>FYI</a>
-                <a onClick={this.switchProjectType('#heartbeat')} id='heartbeat' className='btn btn-normal'>Heartbeat</a>
-                <a onClick={this.switchProjectType('#pitch')} id='pitch' className='btn btn-normal'>Pitch</a>
-                <a onClick={this.switchProjectType('#question')} id='question' className='btn btn-normal'>Question</a>
-                <a onClick={this.switchProjectType('#something')} id='something' className='btn btn-submit'>Something else</a>
+                {messageTypes.map(type => (
+                  <a key={type}
+                    onClick={this.switchProjectType(`#${type}`)}
+                    id={type}
+                    className={`btn ${message.message_type === type ? 'btn-submit' : 'btn-normal'}`}>
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </a>
+                ))}
               </div>
               <div className='message-form-inputs'>
                 <form>
-                  <input value={this.state.message.title} type='text' className={this.state.errors.title ? 'invalid-input' : ''} placeholder='Title...'
+                  <input value={message.title} type='text' className={this.state.errors.title ? 'invalid-input' : ''} placeholder='Title...'
                     onChange={this.update('title')} />
-                  <textarea value={this.state.message.body} className={this.state.errors.body ? 'invalid-input' : ''} placeholder='Write away...'
+                  <textarea value={message.body} className={this.state.errors.body ? 'invalid-input' : ''} placeholder='Write away...'
                     onChange={this.update('body')}></textarea>
                   <div>
                     <input onClick={this.handleSubmit} type='submit' className='btn btn-submit' value='Post this message' />

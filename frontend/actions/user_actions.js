@@ -28,11 +28,11 @@ const receiveUserErrors = errors => {
 export const fetchCompanyUsers = id => dispatch => {
   return APIUtil.fetchCompanyUsers(id).
     then(res => dispatch(receiveCompanyUsers(res.users))).
-    fail(res => dispatch(receiveUserErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveUserErrors(res.responseJSON.errors)))
 }
 
 export const fetchUser = id => dispatch => {
   return APIUtil.fetchUser(id).
     then(res => dispatch(receiveUser(res.user))).
-    fail(res => dispatch(receiveUserErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveUserErrors(res.responseJSON.errors)))
 }

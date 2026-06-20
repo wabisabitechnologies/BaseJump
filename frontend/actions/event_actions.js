@@ -36,25 +36,25 @@ const receiveEventErrors = errors => {
 export const fetchProjectEvents = id => dispatch => {
   return APIUtil.fetchProjectEvents(id).
     then(res => dispatch(receiveEvents(res.events))).
-    fail(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
 }
 export const fetchEvent = id => dispatch => {
   return APIUtil.fetchEvent(id).
     then(res => dispatch(receiveEvent(res.event))).
-    fail(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
 }
 export const createEvent = event => dispatch => {
   return APIUtil.createEvent(event).
     then(res => dispatch(receiveEvent(res.event))).
-    fail(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
 }
 export const updateEvent = event => dispatch => {
   return APIUtil.updateEvent(event).
     then(res => dispatch(receiveEvent(res.event))).
-    fail(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
 }
 export const deleteEvent = id => dispatch => {
   return APIUtil.deleteEvent(id).
     then(res => dispatch(removeEvent(id))).
-    fail(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveEventErrors(res.responseJSON.errors)))
 }

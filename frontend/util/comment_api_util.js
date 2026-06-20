@@ -1,42 +1,46 @@
-export const fetchTodoListComments = id => {
-  return $.ajax({
-    url: `api/todolists/${id}/comments`
-  })
-}
+export const fetchTodoListComments = async (id) => {
+  const res = await fetch(`/api/todolists/${id}/comments`);
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const fetchMessageComments = id => {
-  return $.ajax({
-    url: `api/messages/${id}/comments`
-  })
-}
+export const fetchMessageComments = async (id) => {
+  const res = await fetch(`/api/messages/${id}/comments`);
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const fetchEventComments = id => {
-  return $.ajax({
-    url: `api/events/${id}/comments`
-  })
-}
+export const fetchEventComments = async (id) => {
+  const res = await fetch(`/api/events/${id}/comments`);
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
+export const createComment = async (comment) => {
+  const res = await fetch('/api/comments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ comment }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
+export const updateComment = async (comment) => {
+  const res = await fetch(`/api/comments/${comment.id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ comment }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const createComment = comment => {
-  return $.ajax({
-    url: `api/comments`,
-    method: 'post',
-    data: { comment }
-  })
-}
-
-export const updateComment = comment => {
-  return $.ajax({
-    url: `api/comments/${comment.id}`,
-    method: 'patch',
-    data: { comment }
-  })
-}
-
-export const destroyComment = id => {
-  return $.ajax({
-    url: `api/comments/${id}`,
-    method: 'delete',
-  })
-}
+export const destroyComment = async (id) => {
+  const res = await fetch(`/api/comments/${id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};

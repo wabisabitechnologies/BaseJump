@@ -4,8 +4,7 @@ import UserIconDisplay from '../user_icon_display'
 class CommentForm extends React.Component {
   constructor(props){
     super(props)
-    console.log(this.props);
-    this.state = { comment: this.props.comment, formType: this.props.formType }
+    this.state = { comment: this.props.comment, formType: this.props.formType, hasErrors: false }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleErrors = this.handleErrors.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
@@ -13,14 +12,13 @@ class CommentForm extends React.Component {
   }
 
   clearComment() {
-    console.log(this.props);
     const comment = this.props.comment
     this.setState( { comment })
   }
 
   update(field) {
     return (e) => {
-      $('textarea').removeClass('invalid-input')
+      this.setState({ hasErrors: false })
       e.preventDefault()
       const comment = Object.assign({}, this.state.comment, { [field]: e.target.value })
       this.setState( { comment })
@@ -31,7 +29,7 @@ class CommentForm extends React.Component {
     e.preventDefault()
     this.props.processComment(this.state.comment).
       then(res => this.clearComment()).
-      fail(res => this.handleErrors(res))
+      catch(res => this.handleErrors(res))
   }
 
   handleCancel(e) {
@@ -40,7 +38,7 @@ class CommentForm extends React.Component {
   }
 
   handleErrors(res) {
-    $('textarea').addClass('invalid-input')
+    this.setState({ hasErrors: true })
   }
 
   render() {
@@ -49,6 +47,7 @@ class CommentForm extends React.Component {
         <UserIconDisplay user={this.props.currentUser} size={40} />
         <form onSubmit={this.handleSubmit}>
           <textarea onChange={this.update('body')} value={this.state.comment.body}
+            className={this.state.hasErrors ? 'invalid-input' : ''}
             placeholder='Add a comment....'></textarea>
           <input type='submit' className='btn btn-submit'/>
         </form>

@@ -1,67 +1,66 @@
 var path = require("path");
 var webpack = require("webpack");
 
-var plugins = []; // if using any plugins for both dev and production
-var devPlugins = []; // if using any plugins for development
+var isProduction = process.env.NODE_ENV === 'production';
 
-var prodPlugins = [
-  new webpack.DefinePlugin({
-    'process.env': {
-      'NODE_ENV': JSON.stringify('production')
-    }
-  }),
-  new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: true
-    }
-  })
-];
-
-plugins = plugins.concat(
-  process.env.NODE_ENV === 'production' ? prodPlugins : devPlugins
-)
+var plugins = [];
+if (isProduction) {
+  plugins.push(
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    })
+  );
+}
 
 module.exports = {
+  mode: isProduction ? 'production' : 'development',
   context: __dirname,
   entry: './frontend/basejump.jsx',
   output: {
-    path: path.resolve(__dirname, 'app','assets','javascripts'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'public', 'assets'),
+    filename: 'bundle.js',
+    publicPath: '/assets/'
   },
   plugins: plugins,
   resolve: {
-    extensions: ['.js', '.jsx', '*']
+    extensions: ['.js', '.jsx', '.*']
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015']
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-react', '@babel/preset-env']
+          }
         }
       },
       {
-       test: /\.css$/,
-       use: ['style-loader', 'css-loader'],
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
-       test: /\.less$/,
-       use: ['style-loader', 'css-loader', 'less-loader'],
+        test: /\.less$/,
+        use: ['style-loader', 'css-loader', 'less-loader'],
       },
       {
-       test: /\.json$/,
-       loader: 'json-loader',
-     },
-     {
-       test: /\.(jpg|png|svg)$/,
-       loader: 'url-loader',
-       options: {
-        limit: 25000,
-      }
-     }
+        test: /\.json$/,
+        type: 'asset/resource', // replaces json-loader
+      },
+      {
+        test: /\.(jpg|png|svg)$/,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 25000,
+          },
+        },
+      },
     ]
   },
-  devtool: 'source-maps',
+  devtool: 'source-map',
 };

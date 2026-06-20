@@ -7,6 +7,7 @@ import TodoErrorsReducer from './todo_errors_reducer'
 import MessageErrorsReducer from './message_errors_reducer'
 import CommentErrorsReducer from './comment_errors_reducer'
 import EventErrorsReducer from './event_errors_reducer'
+import SubtaskErrorsReducer from './subtask_errors_reducer'
 
 export default combineReducers({
   session: SessionErrorsReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
   todo: TodoErrorsReducer,
   message: MessageErrorsReducer,
   comment: CommentErrorsReducer,
-  event: EventErrorsReducer
+  event: EventErrorsReducer,
+  subtask: SubtaskErrorsReducer,
 })

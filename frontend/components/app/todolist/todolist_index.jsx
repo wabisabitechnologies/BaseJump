@@ -7,13 +7,12 @@ import Loading from '../loader'
 class TodoListIndex extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {loading: false}
+    this.state = {loading: false, showForm: false}
     this.toggleHide = this.toggleHide.bind(this)
   }
 
   componentDidMount(){
     this.setState({loading: true})
-    debugger
     this.props.fetchProject(this.props.projectId)
       .then((res) => this.props.fetchProjectTodoLists(this.props.projectId))
       .then((res) => this.props.fetchProjectTodos(this.props.projectId));
@@ -29,14 +28,11 @@ class TodoListIndex extends React.Component {
   }
 
   toggleHide(){
-    $(`#add-todolist-${this.props.project.id}`).addClass('hidden')
-    $(`#new-todolist-${this.props.project.id}`).removeClass('hidden')
+    this.setState({ showForm: true })
   }
-
 
   render(){
     const todoLists = this.props.todoLists
-
 
     if(this.state.loading || !Boolean(this.props.project)){
       return (
@@ -53,9 +49,10 @@ class TodoListIndex extends React.Component {
            > To-dos</header>
           <div className='main-tool'>
             <h1>To-dos <span id='completion'></span></h1>
-            <a className='btn btn-submit'
-              id={`add-todolist-${this.props.project.id}`}
-              onClick={this.toggleHide}>Make another list</a>
+            {!this.state.showForm && (
+              <a className='btn btn-submit'
+                onClick={this.toggleHide}>Make another list</a>
+            )}
             <TodoListForm project={this.props.project}
               currentUser={this.props.currentUser}
               createTodoList={this.props.createTodoList} />

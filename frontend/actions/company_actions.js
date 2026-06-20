@@ -22,11 +22,11 @@ export const fetchCompany = id => dispatch => {
   return APIUtil.fetchCompany(id).
     then(res => dispatch(receiveCompany(res.company))).
     then(res => dispatch(fetchCompanyUsers(res.company.id))).
-    fail(res => dispatch(receiveCompanyErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveCompanyErrors(res.responseJSON.errors)))
 }
 
 export const updateCompany = company => dispatch => {
   return APIUtil.fetchCompany(company).
     then(res => dispatch(receiveCompany(res))).
-    fail(res => dispatch(receiveCompanyErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveCompanyErrors(res.responseJSON.errors)))
 }

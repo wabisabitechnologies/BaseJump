@@ -1,0 +1,6 @@
+<% if @current_user_json %>
+<script>
+  window.currentUser = <%= raw @current_user_json %>;
+  window.currentCompany = <%= raw @current_company_json %>;
+</script>
+<% end %>

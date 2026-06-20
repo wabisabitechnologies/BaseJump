@@ -2,10 +2,51 @@
   "name": "basejump",
   "private": true,
   "dependencies": {
-    "@hotwired/turbo-rails": "^8.0.0"
+    "@hotwired/turbo-rails": "^8.0.0",
+    "json-loader": "^0.5.7",
+    "less-loader": "^13.0.0",
+    "moment": "^2.30.1",
+    "postcss-loader": "^8.2.1",
+    "rc-time-picker": "^3.7.3",
+    "react": "^19.2.7",
+    "react-calendar": "^6.0.1",
+    "react-datepicker": "^9.1.0",
+    "react-dom": "^19.2.7",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^7.17.0",
+    "react-simple-dropdown": "^3.2.3",
+    "react-spinners": "^0.17.0",
+    "redux": "^5.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^3.1.0",
+    "titleize": "^4.0.0",
+    "url-loader": "^4.1.1"
   },
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@storybook/addon-a11y": "^10.4.5",
+    "@storybook/addon-docs": "^10.4.5",
+    "@storybook/addon-onboarding": "^10.4.5",
+    "@storybook/addon-webpack5-compiler-swc": "^4.0.3",
+    "@storybook/react-webpack5": "^10.4.5",
+    "@tailwindcss/cli": "^4.3.1",
+    "@tailwindcss/postcss": "^4.3.1",
+    "autoprefixer": "^10.5.0",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
+    "postcss": "^8.5.15",
+    "prop-types": "^15.8.1",
+    "storybook": "^10.4.5",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^4.3.1",
+    "webpack-cli": "^7.0.3"
   }
 }

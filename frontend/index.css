@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-landing-blue: #007BB6;
+  --color-landing-dark: #283C46;
+  --color-landing-beige: #F4EFE7;
+  --color-signup-blue: #2E6BC2;
+  --font-family-sans: 'Noto Sans', sans-serif;
+  --font-family-serif: 'Noto Serif', serif;
+}
+
+/* Barred span for "Type your email address" */
+.barred-span {
+  position: relative;
+}
+.barred-span::before,
+.barred-span::after {
+  content: '';
+  width: 100px;
+  position: absolute;
+  top: 50%;
+  border-width: 0.5px;
+  border-style: solid;
+  border-color: rgba(40, 60, 70, 0.2);
+}
+.barred-span::before {
+  left: 0;
+  margin-left: -105px;
+}
+.barred-span::after {
+  margin-left: 5px;
+}

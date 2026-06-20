@@ -1,22 +1,28 @@
-export const signup = user => {
-  return $.ajax({
-    method: 'post',
-    url: 'api/users',
-    data: { user }
-  })
-}
+export const signup = async (user) => {
+  const res = await fetch('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const login = user => {
-  return $.ajax({
-    method: 'post',
-    url: 'api/session',
-    data: { user }
-  })
-}
+export const login = async (user) => {
+  const res = await fetch('/api/session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const logout = () => {
-  return $.ajax({
-    method: 'delete',
-    url: `api/session`,
-  })
-}
+export const logout = async () => {
+  const res = await fetch('/api/session', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};

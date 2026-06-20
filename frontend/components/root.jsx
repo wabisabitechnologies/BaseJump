@@ -1,32 +1,37 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import { HashRouter, Route, Switch, Redirect, withRouter} from 'react-router-dom'
-import LandingPage from './landing_page/main'
-import AppContainer from './app/main_container'
-import { AuthRoute, ProtectedRoute } from '../util/route_util'
-import SessionFormContainer from './session/session_form_container'
-// const ProjectRedirect = (props) => {
-//   return (
-//     <Redirect to={`/${props.match.userId}/projects`} />
-//   )
-// }
+import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './landing_page/main';
+import AppContainer from './app/main_container';
+import AuthFormContainer from './auth/auth_form_container';
 
-const Root = ({store}) => {
-   (store.getState());
+const Root = ({ store }) => {
+  const currentUser = store.getState().session.currentUser;
+
   return (
-  <Provider store={store}>
-    <HashRouter>
-      <div>
-        <Switch>
-          <AuthRoute exact path='/signup' component={SessionFormContainer} />
-          <AuthRoute exact path='/login' component={SessionFormContainer} />
-          <ProtectedRoute path='/:userId/projects' component={AppContainer}
-            currentUser={store.getState().session.currentUser}/>
-          <AuthRoute path='/' component={LandingPage} />
-        </Switch>
-      </div>
-    </HashRouter>
-  </Provider>
-)}
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={
+            currentUser
+              ? <Navigate to={`/${currentUser.id}/projects`} replace />
+              : <AuthFormContainer formType="login" />
+          } />
+          <Route path="/signup" element={
+            currentUser
+              ? <Navigate to={`/${currentUser.id}/projects`} replace />
+              : <AuthFormContainer formType="signup" />
+          } />
+          <Route path="/:userId/projects/*" element={
+            currentUser
+              ? <AppContainer currentUser={currentUser} />
+              : <Navigate to="/login" replace />
+          } />
+          <Route path="*" element={<LandingPage />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
+  );
+};
 
-export default Root
+export default Root;

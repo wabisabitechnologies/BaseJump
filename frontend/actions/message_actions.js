@@ -8,29 +8,28 @@ export const RECEIVE_MESSAGE_ERRORS = 'RECEIVE_MESSAGE_ERRORS'
 export const fetchProjectMessages = (id) => dispatch => {
   return APIUtil.fetchProjectMessages(id).
     then(res => dispatch(receiveMessages(res.messages))).
-    fail(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
 }
 export const fetchMessage = (id) => dispatch => {
   return APIUtil.fetchMessage(id).
     then(res => dispatch(receiveMessage(res.message))).
-    fail(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
 }
 export const createMessage = (message) => dispatch => {
   return APIUtil.createMessage(message).
     then(res => dispatch(receiveMessage(res.message))).
-    fail(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
 }
 export const updateMessage = (message) => dispatch => {
   return APIUtil.updateMessage(message).
     then(res => dispatch(receiveMessage(res.message))).
-    fail(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
 }
 export const deleteMessage = (id) => dispatch => {
   return APIUtil.deleteMessage(id).
     then(res => dispatch(removeMessage(id))).
-    fail(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveMessageErrors(res.responseJSON.errors)))
 }
-
 
 const receiveMessages = messages => ({
   type: RECEIVE_MESSAGES,

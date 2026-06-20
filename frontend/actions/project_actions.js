@@ -22,23 +22,23 @@ const receiveProjectErrors = errors => ({
 export const fetchUserProjects = (id, projectType) => dispatch => {
   return APIUtil.fetchUserProjects(id, projectType).
     then(res => dispatch(receiveUserProjects(res.projects))).
-    fail(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
 }
 
 export const fetchProject = id => dispatch => {
   return APIUtil.fetchProject(id).
     then(res => dispatch(receiveProject(res.project))).
-    fail(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
 }
 
 export const postProject = project => dispatch => {
   return APIUtil.postProject(project).
     then(res => dispatch(receiveProject(res.project))).
-    fail(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
 }
 
 export const updateProject = project => dispatch => {
   return APIUtil.updateProject(project).
     then(res => dispatch(receiveProject(res.project))).
-    fail(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveProjectErrors(res.responseJSON.errors)))
 }

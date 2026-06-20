@@ -1,31 +1,35 @@
-export const fetchUserProjects = (id, projectType) => {
-  let url = `api/users/${id}/projects`
-  if(projectType){
-    url = `api/users/${id}/projects?project_type=${projectType}`
+export const fetchUserProjects = async (id, projectType) => {
+  let url = `/api/users/${id}/projects`;
+  if (projectType) {
+    url = `/api/users/${id}/projects?project_type=${projectType}`;
   }
-  return $.ajax({
-    url
-  })
-}
+  const res = await fetch(url);
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const fetchProject = id => {
-  return $.ajax({
-    url: `api/projects/${id}`
-  })
-}
+export const fetchProject = async (id) => {
+  const res = await fetch(`/api/projects/${id}`);
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const postProject = project => {
-  return $.ajax({
-    url: `api/projects`,
-    method: 'post',
-    data: { project }
-  })
-}
+export const postProject = async (project) => {
+  const res = await fetch('/api/projects', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ project }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};
 
-export const updateProject = project => {
-  return $.ajax({
-    url: `api/projects/${project.id}`,
-    method: 'patch',
-    data: { project }
-  })
-}
+export const updateProject = async (project) => {
+  const res = await fetch(`/api/projects/${project.id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ project }),
+  });
+  if (!res.ok) throw { responseJSON: await res.json() };
+  return res.json();
+};

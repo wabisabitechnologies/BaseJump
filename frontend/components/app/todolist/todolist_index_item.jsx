@@ -9,15 +9,15 @@ class TodoListIndexItem extends React.Component {
     this.state = {
       todos: {},
       doneTodos: {},
-      pendingTodos: {}
+      pendingTodos: {},
+      showForm: false,
     }
     this.toggleHide = this.toggleHide.bind(this)
     this.filterTodos = this.filterTodos.bind(this)
   }
 
   toggleHide(){
-    $(`#add-todo-${this.props.todoList.id}`).addClass('hidden')
-    $(`#new-todo-${this.props.todoList.id}`).removeClass('hidden')
+    this.setState({ showForm: !this.state.showForm })
   }
 
   componentDidMount(){
@@ -58,8 +58,6 @@ class TodoListIndexItem extends React.Component {
     const doneTodos = this.state.doneTodos;
     const pendingTodos = this.state.pendingTodos;
 
-
-
     return (
       <li className='todolist-item'>
           <h1>
@@ -73,8 +71,10 @@ class TodoListIndexItem extends React.Component {
             { Object.keys(pendingTodos).map(id => <TodoItem key={id}
               todo={todos[id]} toggleTodo={toggleTodo}/>)}
           </ul>
-          <a id={`add-todo-${todoList.id}`} className='btn btn-normal'
-            onClick={this.toggleHide}>Add a to-do</a>
+          {!this.state.showForm && (
+            <a className='btn btn-normal'
+              onClick={this.toggleHide}>Add a to-do</a>
+          )}
           <TodoForm createTodo={this.props.createTodo}
             todoList={todoList} currentUser={this.props.currentUser} />
           <ul className='todos done'>

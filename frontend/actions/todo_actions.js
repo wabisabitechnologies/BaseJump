@@ -1,4 +1,5 @@
 import * as APIUtil from '../util/todo_api_util'
+import * as LooseTodoAPIUtil from '../util/loose_todo_api_util'
 import { fetchTodoList } from './todolist_actions'
 
 export const RECEIVE_TODOS = 'RECEIVE_TODOS'
@@ -20,35 +21,40 @@ const receiveTodoErrors = errors => ({
   errors
 })
 
-
 export const fetchProjectTodos = id => dispatch => {
   return APIUtil.fetchProjectTodos(id).
     then(res => dispatch(receiveTodos(res.todos))).
-    fail(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
 }
 export const fetchTodoListTodos = id => dispatch => {
   return APIUtil.fetchTodoListTodos(id).
     then(res => dispatch(receiveTodos(res.todos))).
-    fail(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
 }
 export const fetchTodo = id => dispatch => {
   return APIUtil.fetchTodo(id).
     then(res => dispatch(receiveTodo(res.todo))).
-    fail(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
 }
 export const createTodo = id => dispatch => {
   return APIUtil.createTodo(id).
     then(res => dispatch(receiveTodo(res.todo))).
     then(res => dispatch(fetchTodoList(res.todo.todoListId))).
-    fail(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
 }
 export const updateTodo = id => dispatch => {
   return APIUtil.updateTodo(id).
     then(res => dispatch(receiveTodo(res.todo))).
-    fail(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
 }
 export const toggleTodo = id => dispatch => {
   return APIUtil.toggleTodo(id).
     then(res => dispatch(receiveTodo(res.todo))).
-    fail(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
+    catch(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
+}
+
+export const fetchProjectLooseTodos = id => dispatch => {
+  return LooseTodoAPIUtil.fetchProjectLooseTodos(id).
+    then(res => dispatch(receiveTodos(res.todos))).
+    catch(res => dispatch(receiveTodoErrors(res.responseJSON.errors)))
 }

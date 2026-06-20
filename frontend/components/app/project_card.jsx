@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { withRouter } from '../../util/with_router_shim'
 
 const ProjectCard = (props) => {
   const projectId = props.project.id

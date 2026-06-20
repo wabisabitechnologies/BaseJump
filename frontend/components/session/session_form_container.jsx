@@ -4,7 +4,7 @@ import { fetchCompany, updateCompany } from '../../actions/company_actions'
 import { fetchUserProjects } from '../../actions/project_actions'
 import { fetchCurrentUser } from '../../actions/session_actions'
 import { login, signup } from '../../actions/session_actions.js'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from '../../util/with_router_shim'
 
 const mapStateToProps = (state, ownProps) => {
   let user = {

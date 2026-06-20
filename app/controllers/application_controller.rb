@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include ActionView::RecordIdentifier
 
-  protect_from_forgery with: :null_session
+  protect_from_forgery with: :null_session, unless: -> { request.format.json? || request.content_type =~ /application\/json/ }
   helper_method :current_user, :logged_in?, :current_company
 
   private

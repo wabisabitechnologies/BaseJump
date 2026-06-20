@@ -10,7 +10,8 @@ class ProjectSection extends React.Component {
     this.state = {
       submittedProject: false,
       loading: false,
-      project: {name: '', project_type: '', admin_id: ''}
+      project: {name: '', project_type: '', admin_id: ''},
+      hasErrors: false,
     }
     this.dividerText = this.dividerText.bind(this)
     this.companyLogo = this.companyLogo.bind(this)
@@ -19,11 +20,10 @@ class ProjectSection extends React.Component {
     this.update = this.update.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
-
+    this.dropdownRef = React.createRef()
   }
 
   componentDidMount(){
-    // this.setState({loading: true})
     const project = {
       name: '',
       project_type: this.props.projectType,
@@ -33,48 +33,47 @@ class ProjectSection extends React.Component {
   }
 
   componentWillReceiveProps(newProps){
-    if(this.state.submittedProject){
-      this.props.fetchUserProjects(this.props.currentUser.id).
-      then(this.setState({ submittedProject: false}))
+    if (newProps.submittedProject){
+      this.setState({
+        project: {name: '', project_type: newProps.projectType, admin_id: this.props.currentUser.id},
+        submittedProject: false
+      })
     }
-    setTimeout(() => this.setState({loading: false}), 750)
   }
 
   dividerText(){
-    switch (this.props.projectType) {
-      case 'company':
-        return this.props.company.name
+    const projectType = this.props.projectType
+    switch(projectType){
       case 'team':
         return 'Teams'
-      case 'project':
+      case 'company':
+        return 'Company HQ'
+      default:
         return 'Projects'
     }
   }
 
   companyLogo(){
-    if(this.props.projectType == 'company'){
+    if(this.props.projectType === 'company'){
       return (
-          <li className='card logo'>
-            <img className='company-logo' src={this.props.company.imageUrl}/>
-          </li>
-        )
+        <li className='card-company-logo'>
+          <img src='https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png'/>
+          <h1>BaseJump</h1>
+        </li>
+      )
     }
   }
 
   userLinks(){
-    if(this.props.projectType == 'company'){
+    if(this.props.projectType === 'company'){
       return (
-        <li className='card'>
-          <h2>My Stuff</h2>
-          <ul>
-            <li><Link className='coming-soon' to='/'>My Assignments</Link></li>
-            <li><Link className='coming-soon' to='/'>My Bookmarks</Link></li>
-            <li><Link className='coming-soon' to='/'>My Schedule</Link></li>
-            <li><Link className='coming-soon' to='/'>My Drafts</Link></li>
-            <li><Link className='coming-soon' to='/'>My Recent Activity</Link></li>
-
-          </ul>
-        </li>
+        <div>
+          <Link to='/'>My Assignments</Link>
+          <Link to='/'>Bookmarks</Link>
+          <Link to='/'>Schedule</Link>
+          <Link to='/'>Drafts</Link>
+          <Link to='/'>Recent Activity</Link>
+        </div>
       )
     }
   }
@@ -83,13 +82,14 @@ class ProjectSection extends React.Component {
     const projectType = this.props.projectType
     if(projectType !== 'company'){
       return (
-        <Dropdown>
+        <Dropdown ref={this.dropdownRef}>
           <DropdownTrigger className='btn btn-new'>
             New
           </DropdownTrigger>
           <DropdownContent>
             <form className='new-project-dropdown'>
               <input type='text' id={projectType}
+                className={this.state.hasErrors ? 'invalid-input' : ''}
                 placeholder={`${projectType[0].toUpperCase() + projectType.slice(1)} Name`}
                 value={this.state.project.name} onChange={this.update}/>
               <div>
@@ -106,7 +106,7 @@ class ProjectSection extends React.Component {
   }
 
   update(e) {
-    $(`#${this.props.projectType}`).removeClass('invalid-input')
+    this.setState({ hasErrors: false })
     e.preventDefault()
     const project = Object.assign({}, this.state.project, {name: e.target.value})
     this.setState({ project })
@@ -120,10 +120,12 @@ class ProjectSection extends React.Component {
       admin_id: this.props.currentUser.id
     }
     this.props.postProject(this.state.project).
-      then(this.setState({ submittedProject: true })).
-      then(this.setState({ project })).
-      then(() => $('.dropdown').removeClass('dropdown--active')).
-      fail(res => this.handleErrors(res.responseJSON.errors))
+      then(() => {
+        this.setState({ submittedProject: true })
+        this.setState({ project })
+        if (this.dropdownRef.current) this.dropdownRef.current.hide()
+      }).
+      catch(res => this.handleErrors(res.responseJSON.errors))
   }
 
   handleCancel(e) {
@@ -133,12 +135,12 @@ class ProjectSection extends React.Component {
       project_type: this.props.projectType,
       admin_id: this.props.currentUser.id
     }
-    $('.dropdown').removeClass('dropdown--active')
+    if (this.dropdownRef.current) this.dropdownRef.current.hide()
     this.setState({ project })
   }
 
   handleErrors(err) {
-    $(`#${this.props.projectType}`).addClass('invalid-input')
+    this.setState({ hasErrors: true })
   }
 
   render(){
@@ -171,10 +173,5 @@ class ProjectSection extends React.Component {
     }
   }
 }
-// {
-//   this.props.projectType === 'company' ? null : (
-//     <Link to='/' className='btn btn-new'>New</Link>
-//   )
-// }
 
 export default ProjectSection

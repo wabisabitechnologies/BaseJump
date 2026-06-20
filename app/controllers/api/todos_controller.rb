@@ -1,6 +1,12 @@
 class Api::TodosController < ApplicationController
   def index
-    if params[:project_id]
+    if params[:loose] && params[:project_id]
+      project = Project.find(params[:project_id])
+      # Loose todos have no project association through todo_list,
+      # so query by project members' authored loose todos
+      @todos = Todo.loose.where(author_id: project.user_ids)
+      render 'api/todos/index'
+    elsif params[:project_id]
       begin
         project = Project.find(params[:project_id])
       rescue
