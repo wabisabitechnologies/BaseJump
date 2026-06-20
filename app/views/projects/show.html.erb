@@ -1,0 +1,33 @@
+<div class="main-app">
+  <nav class="app-nav">
+    <div class="flex justify-between" style="align-items: center;">
+      <div class="flex" style="align-items: center;">
+        <a href="/home" class="logo">
+          <img src="https://res.cloudinary.com/basejump/image/upload/v1580630150/basecamp-logo.svg" alt="BaseJump" style="height: 37px;">
+        </a>
+      </div>
+      <div class="flex" style="align-items: center;">
+        <span style="font-size: 13px; margin-right: 10px;"><%= current_user.name %></span>
+        <%= button_to "Log out", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
+      </div>
+    </div>
+  </nav>
+
+  <div class="project-page">
+    <h1><%= @project.name %></h1>
+    <% if @project.description.present? %>
+      <h2><%= @project.description %></h2>
+    <% end %>
+
+    <ul class="tools">
+      <li>
+        <a href="<%= project_todo_lists_path(@project) %>">
+          <div class="tool-card">
+            <h2>Todo Lists</h2>
+            <li><%= @todo_lists.count %> lists</li>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

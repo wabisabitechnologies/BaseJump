@@ -1,31 +1,47 @@
-<div class="signup-page">
-  <h1>Sign up for BaseJump</h1>
+<%# Signup page styled with landing_page SCSS design system %>
+<div class="form-page">
+  <div class="formHeader">
+    <h3>Sign up for BaseJump</h3>
+    <p>Create your account to get started.</p>
+  </div>
 
-  <form action="/users" method="post">
-    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <%= form_for @user, html: { class: "sign-up-form" } do |f| %>
+    <div class="signup">Sign up</div>
 
     <div>
-      <label for="user_name">Full Name</label>
-      <input type="text" name="user[name]" id="user_name" required>
+      <%= f.label :name, "Full Name" %>
+      <%= f.text_field :name, placeholder: "Your name", required: true %>
     </div>
 
     <div>
-      <label for="user_username">Username</label>
-      <input type="text" name="user[username]" id="user_username" required>
+      <%= f.label :username %>
+      <%= f.text_field :username, placeholder: "Choose a username", required: true %>
     </div>
 
     <div>
-      <label for="user_email">Email</label>
-      <input type="email" name="user[email]" id="user_email" required>
+      <%= f.label :email %>
+      <%= f.email_field :email, placeholder: "my@email.com", required: true %>
     </div>
 
     <div>
-      <label for="user_password">Password</label>
-      <input type="password" name="user[password]" id="user_password" required>
+      <%= f.label :password %>
+      <%= f.password_field :password, placeholder: "••••••••", required: true %>
     </div>
 
-    <button type="submit">Sign up</button>
-  </form>
+    <% if @user.errors.any? %>
+      <div class="form-errors">
+        <% @user.errors.full_messages.each do |msg| %>
+          <p><%= msg %></p>
+        <% end %>
+      </div>
+    <% end %>
 
-  <p>Already have an account? <a href="/session/new">Log in</a></p>
+    <div>
+      <%= f.submit "Sign up", class: "btn btn-submit", style: "width: 100%;" %>
+    </div>
+  <% end %>
+
+  <p style="margin-top: 10px;">
+    Already have an account? <%= link_to "Log in", new_session_path %>
+  </p>
 </div>

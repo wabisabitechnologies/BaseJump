@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def new
-    render plain: 'Login form'
+    render :new
   end
 
   def create

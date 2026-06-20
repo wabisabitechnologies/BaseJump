@@ -1,73 +1,81 @@
-<div class="min-h-screen bg-gray-100">
-  <nav class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex">
-          <div class="flex-shrink-0 flex items-center">
-            <h1 class="text-xl font-bold text-blue-600">BaseJump</h1>
-          </div>
-          <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-            <%= link_to "Home", home_path, class: "border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium" %>
-            <%= link_to "All Projects", "#", class: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium" %>
-          </div>
-        </div>
-        <div class="flex items-center">
-          <span class="text-sm text-gray-700 mr-4"><%= current_user.name %></span>
-          <%= button_to "Log out", session_path, method: :delete, class: "text-sm text-gray-500 hover:text-gray-700" %>
-        </div>
+<div class="main-app">
+  <nav class="app-nav">
+    <div class="flex justify-between" style="align-items: center;">
+      <div class="flex" style="align-items: center;">
+        <a href="/home" class="logo">
+          <img src="https://res.cloudinary.com/basejump/image/upload/v1580630150/basecamp-logo.svg" alt="BaseJump" style="height: 37px;">
+        </a>
+      </div>
+      <div class="flex" style="align-items: center;">
+        <span style="font-size: 13px; margin-right: 10px;"><%= current_user.name %></span>
+        <%= button_to "Log out", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
       </div>
     </div>
   </nav>
 
-  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-    <div class="px-4 py-6 sm:px-0">
-      <h2 class="text-2xl font-bold text-gray-900 mb-6">Your Projects</h2>
+  <div class="main-app-content">
+    <div style="width: 100%; max-width: 775px;">
+      <h2 style="font-size: 20px; font-weight: 700; margin: 20px 0; text-align: center;">Your Projects</h2>
 
       <%# Company HQ %>
       <% if @company_hq %>
-        <section class="mb-8">
-          <h3 class="text-lg font-semibold text-gray-700 mb-4">Company HQ</h3>
-          <div class="bg-white rounded-lg shadow p-6">
-            <%= link_to @company_hq.name, project_path(@company_hq), class: "text-xl font-semibold text-blue-600 hover:text-blue-800" %>
-            <p class="text-gray-600 mt-1"><%= @company_hq.description %></p>
-          </div>
-        </section>
+        <div class="project-section">
+          <span class="project-divider">Company HQ</span>
+          <ul class="card-holder">
+            <li class="card">
+              <a href="<%= project_path(@company_hq) %>" class="card">
+                <div class="project-card">
+                  <h1><%= @company_hq.name %></h1>
+                  <p><%= @company_hq.description %></p>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
       <% end %>
 
       <%# Teams %>
       <% if @teams.any? %>
-        <section class="mb-8">
-          <h3 class="text-lg font-semibold text-gray-700 mb-4">Teams</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="project-section">
+          <span class="project-divider">Teams</span>
+          <ul class="card-holder">
             <% @teams.each do |team| %>
-              <div class="bg-white rounded-lg shadow p-6">
-                <%= link_to team.name, project_path(team), class: "text-xl font-semibold text-blue-600 hover:text-blue-800" %>
-                <p class="text-gray-600 mt-1"><%= team.description %></p>
-              </div>
+              <li class="card">
+                <a href="<%= project_path(team) %>" class="card">
+                  <div class="project-card">
+                    <h1><%= team.name %></h1>
+                    <p><%= team.description %></p>
+                  </div>
+                </a>
+              </li>
             <% end %>
-          </div>
-        </section>
+          </ul>
+        </div>
       <% end %>
 
       <%# Projects %>
       <% if @other_projects.any? %>
-        <section>
-          <h3 class="text-lg font-semibold text-gray-700 mb-4">Projects</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="project-section">
+          <span class="project-divider">Projects</span>
+          <ul class="card-holder">
             <% @other_projects.each do |project| %>
-              <div class="bg-white rounded-lg shadow p-6">
-                <%= link_to project.name, project_path(project), class: "text-xl font-semibold text-blue-600 hover:text-blue-800" %>
-                <p class="text-gray-600 mt-1"><%= project.description %></p>
-              </div>
+              <li class="card">
+                <a href="<%= project_path(project) %>" class="card">
+                  <div class="project-card">
+                    <h1><%= project.name %></h1>
+                    <p><%= project.description %></p>
+                  </div>
+                </a>
+              </li>
             <% end %>
-          </div>
-        </section>
+          </ul>
+        </div>
       <% end %>
 
       <%# Create Project Button %>
-      <div class="mt-8">
-        <%= link_to "Create New Project", "#", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <div style="text-align: center; margin-top: 20px;">
+        <%= link_to "Create New Project", "#", class: "btn btn-primary" %>
       </div>
     </div>
-  </main>
+  </div>
 </div>

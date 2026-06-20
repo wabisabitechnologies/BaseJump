@@ -1,52 +1,64 @@
-<div class="min-h-screen bg-gray-100">
-  <nav class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex items-center">
-          <%= link_to "← Back to #{@todo_list.project.name}", project_path(@todo_list.project), class: "text-sm text-blue-600 hover:text-blue-800 mr-4" %>
-          <h1 class="text-xl font-bold text-gray-900"><%= @todo_list.title %></h1>
-        </div>
-        <div class="flex items-center">
-          <span class="text-sm text-gray-700 mr-4"><%= current_user.name %></span>
-          <%= button_to "Log out", session_path, method: :delete, class: "text-sm text-gray-500 hover:text-gray-700" %>
-        </div>
+<div class="main-app">
+  <nav class="app-nav">
+    <div class="flex justify-between" style="align-items: center;">
+      <div class="flex" style="align-items: center;">
+        <%= link_to project_path(@todo_list.project), class: "logo" do %>
+          <img src="https://res.cloudinary.com/basejump/image/upload/v1580630150/basecamp-logo.svg" alt="BaseJump" style="height: 37px;">
+        <% end %>
+        <span style="margin-left: 10px; font-size: 13px; color: #007BB6; text-decoration: underline; font-weight: 700;">
+          <%= link_to "← #{@todo_list.project.name}", project_path(@todo_list.project) %>
+        </span>
+      </div>
+      <div class="flex" style="align-items: center;">
+        <span style="font-size: 13px; margin-right: 10px;"><%= current_user.name %></span>
+        <%= button_to "Log out", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
       </div>
     </div>
   </nav>
 
-  <main class="max-w-4xl mx-auto py-6 px-4">
-    <%# Loose Todos Section %>
-    <% if @loose_todos.any? %>
-      <section class="mb-8">
-        <h2 class="text-lg font-semibold text-gray-700 mb-3">Unsorted Todos</h2>
-        <div id="loose-todos" class="space-y-2">
-          <% @loose_todos.each do |todo| %>
-            <%= render partial: "todos/todo", locals: { todo: todo } %>
-          <% end %>
-        </div>
-      </section>
-    <% end %>
+  <div class="tool-page">
+    <header>
+      <span>Todo List</span>
+    </header>
 
-    <%# Todos in this list %>
-    <section>
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-lg font-semibold text-gray-700">Todos</h2>
-        <span class="text-sm text-gray-500">
-          <%= @todos.select(&:done).count %>/<%= @todos.count %> completed
-        </span>
-      </div>
-      <div id="todos" class="space-y-2">
-        <%= render partial: "todos/todo", collection: @todos, as: :todo %>
-      </div>
-    </section>
-
-    <%# New Todo Form %>
-    <div class="mt-6">
-      <%= form_with model: [@todo_list, @todo_list.todos.new], local: true, class: "flex gap-2" do |f| %>
-        <%= f.hidden_field :todo_list_id, value: @todo_list.id %>
-        <%= f.text_field :title, placeholder: "Add a new todo...", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
-        <%= f.submit "Add", class: "inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
+    <div class="main-tool">
+      <h1><%= @todo_list.title %></h1>
+      <% if @todo_list.description.present? %>
+        <h2><%= @todo_list.description %></h2>
       <% end %>
+
+      <%# Loose Todos Section %>
+      <% if @loose_todos.any? %>
+        <div class="todolists">
+          <h1>Unsorted Todos</h1>
+          <div id="loose-todos">
+            <% @loose_todos.each do |todo| %>
+              <%= render partial: "todos/todo", locals: { todo: todo } %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Todos in this list %>
+      <div class="todolists">
+        <h1>Todos <span>(<%= @todos.select(&:done).count %>/<%= @todos.count %> completed)</span></h1>
+        <div id="todos">
+          <%= render partial: "todos/todo", collection: @todos, as: :todo %>
+        </div>
+      </div>
+
+      <%# New Todo Form %>
+      <div class="tool-form">
+        <%= form_with model: [@todo_list, @todo_list.todos.new], local: true do |f| %>
+          <div class="input-fields">
+            <%= f.hidden_field :todo_list_id, value: @todo_list.id %>
+            <%= f.text_field :title, placeholder: "Add a new todo..." %>
+          </div>
+          <div class="submit-buttons">
+            <%= f.submit "Add", class: "btn btn-submit" %>
+          </div>
+        <% end %>
+      </div>
     </div>
-  </main>
+  </div>
 </div>
