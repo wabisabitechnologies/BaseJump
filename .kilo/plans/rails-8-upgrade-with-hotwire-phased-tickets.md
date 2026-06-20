@@ -63,6 +63,16 @@ The React SPA, Storybook, and Tailwind v4 work from commit `5b5df88` have been a
 **Acceptance Criteria:**
 - [ ] `ProjectsController#show` loads project + associated tools (todo_lists, messages, events)
 - [ ] Project show page renders tool cards using `.project-page` and `.tool-card` SCSS classes
+
+### S0-07: NeonDB + Doppler secrets
+**Files:** `bin/dev`, `config/database.yml`
+**Estimate:** 30 min
+**Acceptance Criteria:**
+- [ ] Doppler project `basejump` exists with `DATABASE_URL` pointing to Neon
+- [ ] Doppler CLI scoped to project directory (`doppler setup --project basejump --config dev`)
+- [ ] `bin/dev` runs both dartsass and Rails through `doppler run --`
+- [ ] All 13 schema migrations run on Neon (tables: users, projects, todo_lists, todos, etc.)
+- [ ] Skill file (`.skills/rule/basejump-architecture.md`) documents the setup
 - [ ] Links to todo lists, messages, events work
 - [ ] Matches the original fork's project page visual (see `docs/project_view.png`)
 
@@ -196,14 +206,17 @@ The React SPA, Storybook, and Tailwind v4 work from commit `5b5df88` have been a
 
 ## Phase 4: Knowledge Graph & Capacities Twist (Days 29-39)
 
-### P4-01: Note Polymorphic Model
-**Estimate:** 2 days
+### P4-01: Docs/Pages — Polymorphic Note Model + Page Tool
+**Estimate:** 4 days
 **Acceptance Criteria:**
-- [ ] New `notes` table with `noteable` polymorphic reference
+- [ ] `notes` table with `noteable` polymorphic reference + `parent_id` (self-referential FK for nesting)
+- [ ] New "Docs" project tool alongside TodoLists, Messages, Events (`.tool-page` / `.main-tool` SCSS)
+- [ ] DocsController for index (page tree) + NotesController for CRUD on individual pages
+- [ ] TipTap editor for page body (structured JSON) — importmap, no Node
+- [ ] Page tree sidebar with expand/collapse nesting (Stimulus controller)
 - [ ] Backfill existing messages/todos/events into notes table
-- [ ] Each entity has associated Note record
-- [ ] Note body stored as structured JSON (TipTap)
-- [ ] Backward compatibility - existing data still accessible
+- [ ] Bi-directional links work across both Docs and structured entities (P4-02)
+- [ ] Tags apply to Docs pages (P4-03)
 
 ### P4-02: Bi-Directional Linking System
 **Estimate:** 3 days
