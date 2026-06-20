@@ -3,8 +3,8 @@ class Company < ApplicationRecord
 
   validates :name, presence: true
 
-  has_many :employees, dependent: :destroy
-  has_many :projects, through: :employees
+  has_many :users, dependent: :destroy
+  has_many :projects, dependent: :destroy
 
   def hq_project
     projects.find_by(project_type: 'company')

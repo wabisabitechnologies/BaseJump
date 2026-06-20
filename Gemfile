@@ -4,6 +4,10 @@ gem 'rails', '~> 8.0'
 gem 'pg', '~> 1.0'
 gem 'puma', '~> 6.0'
 
+gem 'importmap-rails'
+gem 'turbo-rails'
+gem 'stimulus-rails'
+
 gem 'jbuilder', '~> 2.0'
 gem 'redis', '~> 4.0'
 gem 'bcrypt', '~> 3.1.7'

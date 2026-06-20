@@ -17,7 +17,7 @@
   <main class="max-w-4xl mx-auto py-6 px-4">
     <div class="mt-6">
       <%= form_with model: [@project, @project.todo_lists.new], local: true, class: "flex gap-2" do |f| %>
-        <%= f.text_field :name, placeholder: "New todo list...", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
+        <%= f.text_field :title, placeholder: "New todo list...", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
         <%= f.text_area :description, placeholder: "Description (optional)", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
         <%= f.submit "Create List", class: "inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
       <% end %>
@@ -27,7 +27,7 @@
       <% @todo_lists.each do |list| %>
         <div class="bg-white rounded-lg shadow p-4">
           <%= link_to [list.project, list], class: "block" do %>
-            <h3 class="text-lg font-semibold text-blue-600 hover:text-blue-800"><%= list.name %></h3>
+            <h3 class="text-lg font-semibold text-blue-600 hover:text-blue-800"><%= list.title %></h3>
             <% if list.description.present? %>
               <p class="text-sm text-gray-500 mt-1"><%= list.description %></p>
             <% end %>
