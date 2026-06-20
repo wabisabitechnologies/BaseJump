@@ -1,81 +1,74 @@
 <div class="main-app">
   <nav class="app-nav">
-    <div class="flex justify-between" style="align-items: center;">
-      <div class="flex" style="align-items: center;">
-        <a href="/home" class="logo">
-          <img src="https://res.cloudinary.com/basejump/image/upload/v1580630150/basecamp-logo.svg" alt="BaseJump" style="height: 37px;">
-        </a>
-      </div>
-      <div class="flex" style="align-items: center;">
-        <span style="font-size: 13px; margin-right: 10px;"><%= current_user.name %></span>
-        <%= button_to "Log out", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
-      </div>
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="/home" class="logo" style="margin-left: 5px;">
+        <span>Home</span>
+      </a>
+    </div>
+    <div>
+      <span style="font-size: 13px; color: #555;"><%= current_user.name %></span>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
     </div>
   </nav>
 
   <div class="main-app-content">
-    <div style="width: 100%; max-width: 775px;">
-      <h2 style="font-size: 20px; font-weight: 700; margin: 20px 0; text-align: center;">Your Projects</h2>
+    <% if @company_hq %>
+      <div class="project-section">
+        <span class="project-divider">Company HQ</span>
+        <ul class="card-holder">
+          <li class="card">
+            <a href="<%= project_path(@company_hq) %>" class="card">
+              <div class="project-card">
+                <h1><%= @company_hq.name %></h1>
+                <p><%= @company_hq.description %></p>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    <% end %>
 
-      <%# Company HQ %>
-      <% if @company_hq %>
-        <div class="project-section">
-          <span class="project-divider">Company HQ</span>
-          <ul class="card-holder">
+    <% if @teams.any? %>
+      <div class="project-section">
+        <span class="project-divider">Teams</span>
+        <ul class="card-holder">
+          <% @teams.each do |team| %>
             <li class="card">
-              <a href="<%= project_path(@company_hq) %>" class="card">
+              <a href="<%= project_path(team) %>" class="card">
                 <div class="project-card">
-                  <h1><%= @company_hq.name %></h1>
-                  <p><%= @company_hq.description %></p>
+                  <h1><%= team.name %></h1>
+                  <p><%= team.description %></p>
                 </div>
               </a>
             </li>
-          </ul>
-        </div>
-      <% end %>
-
-      <%# Teams %>
-      <% if @teams.any? %>
-        <div class="project-section">
-          <span class="project-divider">Teams</span>
-          <ul class="card-holder">
-            <% @teams.each do |team| %>
-              <li class="card">
-                <a href="<%= project_path(team) %>" class="card">
-                  <div class="project-card">
-                    <h1><%= team.name %></h1>
-                    <p><%= team.description %></p>
-                  </div>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
-
-      <%# Projects %>
-      <% if @other_projects.any? %>
-        <div class="project-section">
-          <span class="project-divider">Projects</span>
-          <ul class="card-holder">
-            <% @other_projects.each do |project| %>
-              <li class="card">
-                <a href="<%= project_path(project) %>" class="card">
-                  <div class="project-card">
-                    <h1><%= project.name %></h1>
-                    <p><%= project.description %></p>
-                  </div>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
-
-      <%# Create Project Button %>
-      <div style="text-align: center; margin-top: 20px;">
-        <%= link_to "Create New Project", "#", class: "btn btn-primary" %>
+          <% end %>
+        </ul>
       </div>
+    <% end %>
+
+    <% if @other_projects.any? %>
+      <div class="project-section">
+        <span class="project-divider">Projects</span>
+        <ul class="card-holder">
+          <% @other_projects.each do |project| %>
+            <li class="card">
+              <a href="<%= project_path(project) %>" class="card">
+                <div class="project-card">
+                  <h1><%= project.name %></h1>
+                  <p><%= project.description %></p>
+                </div>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="#" class="btn btn-primary" style="display: inline-block;">New Project</a>
     </div>
   </div>
 </div>

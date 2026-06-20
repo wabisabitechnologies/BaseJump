@@ -1,34 +1,24 @@
-<%# Login page styled with landing_page SCSS design system %>
 <div class="form-page">
-  <img src="https://res.cloudinary.com/basejump/image/upload/v1580630150/basecamp-logo.svg" alt="BaseJump" style="height: 75px;">
+  <a href="/">
+    <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Basecamp" />
+  </a>
 
-  <div class="formHeader">
-    <h3>Welcome back.</h3>
-  </div>
-
-  <%= form_tag session_path, method: :post do %>
-    <div class="signup">Log in</div>
-
-    <div>
-      <%= label_tag :username_or_email, "Username or Email" %>
-      <%= text_field_tag "session[username_or_email]", nil, placeholder: "my@email.com" %>
+  <%= form_tag session_path, method: :post, class: "session-form" do %>
+    <div class="formHeader">
+      <h3>Happy <%= Date.today.strftime("%A") %>!</h3>
+      <p>Just enter your email address or username and we'll get you right into Basejump</p>
     </div>
 
-    <div>
-      <%= label_tag :password, "Password" %>
-      <%= password_field_tag "session[password]", nil, placeholder: "••••••••" %>
-    </div>
-
-    <% if flash[:alert] %>
-      <div class="form-errors"><%= flash[:alert] %></div>
-    <% end %>
-
-    <div>
-      <%= submit_tag "Log in", class: "btn btn-submit", style: "width: 100%;" %>
-    </div>
+    <%= label_tag "session[username_or_email]", "Username" %>
+    <%= text_field_tag "session[username_or_email]", nil, placeholder: "johndoe" %>
+    <%= label_tag :password, "Password" %>
+    <%= password_field_tag "session[password]", nil %>
+    <br>
+    <%= submit_tag "Login", class: "btn btn-submit" %>
+    <%= submit_tag "Demo Login", class: "btn btn-submit" %>
   <% end %>
 
-  <p style="margin-top: 10px;">
-    New to BaseJump? <%= link_to "Sign up", new_user_path %>
-  </p>
+  <span>
+    Don't have an account? <a href="/users/new">Sign up here!</a>
+  </span>
 </div>

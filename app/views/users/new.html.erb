@@ -1,47 +1,32 @@
-<%# Signup page styled with landing_page SCSS design system %>
 <div class="form-page">
-  <div class="formHeader">
-    <h3>Sign up for BaseJump</h3>
-    <p>Create your account to get started.</p>
-  </div>
+  <a href="/">
+    <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Basecamp" />
+  </a>
 
-  <%= form_for @user, html: { class: "sign-up-form" } do |f| %>
-    <div class="signup">Sign up</div>
-
-    <div>
-      <%= f.label :name, "Full Name" %>
-      <%= f.text_field :name, placeholder: "Your name", required: true %>
+  <%= form_for @user, html: { class: "session-form sign-up-form" } do |f| %>
+    <div class="formHeader">
+      <span class="signup">Sign up for Basejump</span>
+      <p class="barred-span">Type your email address</p>
     </div>
 
-    <div>
-      <%= f.label :username %>
-      <%= f.text_field :username, placeholder: "Choose a username", required: true %>
-    </div>
-
-    <div>
+    <div class="signup-fields">
+      <%= f.label :name %>
+      <%= f.text_field :name, placeholder: "John Doe" %>
       <%= f.label :email %>
-      <%= f.email_field :email, placeholder: "my@email.com", required: true %>
+      <%= f.email_field :email, placeholder: "john@doe.com" %>
     </div>
 
-    <div>
-      <%= f.label :password %>
-      <%= f.password_field :password, placeholder: "••••••••", required: true %>
-    </div>
-
-    <% if @user.errors.any? %>
-      <div class="form-errors">
-        <% @user.errors.full_messages.each do |msg| %>
-          <p><%= msg %></p>
-        <% end %>
-      </div>
-    <% end %>
-
-    <div>
-      <%= f.submit "Sign up", class: "btn btn-submit", style: "width: 100%;" %>
-    </div>
+    <%= f.label :username %>
+    <%= f.text_field :username, placeholder: "johndoe" %>
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+    <%= f.label :password_confirmation, "Confirm Password" %>
+    <%= f.password_field :password_confirmation %>
+    <br>
+    <%= f.submit "Sign Up", class: "btn btn-submit" %>
   <% end %>
 
-  <p style="margin-top: 10px;">
-    Already have an account? <%= link_to "Log in", new_session_path %>
-  </p>
+  <span>
+    Already have an account? <a href="/session/new">Sign in here!</a>
+  </span>
 </div>

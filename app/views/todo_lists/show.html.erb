@@ -1,24 +1,22 @@
 <div class="main-app">
   <nav class="app-nav">
-    <div class="flex justify-between" style="align-items: center;">
-      <div class="flex" style="align-items: center;">
-        <%= link_to project_path(@todo_list.project), class: "logo" do %>
-          <img src="https://res.cloudinary.com/basejump/image/upload/v1580630150/basecamp-logo.svg" alt="BaseJump" style="height: 37px;">
-        <% end %>
-        <span style="margin-left: 10px; font-size: 13px; color: #007BB6; text-decoration: underline; font-weight: 700;">
-          <%= link_to "← #{@todo_list.project.name}", project_path(@todo_list.project) %>
-        </span>
-      </div>
-      <div class="flex" style="align-items: center;">
-        <span style="font-size: 13px; margin-right: 10px;"><%= current_user.name %></span>
-        <%= button_to "Log out", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
-      </div>
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="<%= project_path(@todo_list.project) %>" class="logo" style="margin-left: 5px;">
+        <span>Home</span>
+      </a>
+    </div>
+    <div>
+      <span style="font-size: 13px; color: #555;"><%= current_user.name %></span>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
     </div>
   </nav>
 
   <div class="tool-page">
     <header>
-      <span>Todo List</span>
+      <span><%= link_to "← #{@todo_list.project.name}", project_path(@todo_list.project) %></span>
     </header>
 
     <div class="main-tool">
@@ -27,7 +25,6 @@
         <h2><%= @todo_list.description %></h2>
       <% end %>
 
-      <%# Loose Todos Section %>
       <% if @loose_todos.any? %>
         <div class="todolists">
           <h1>Unsorted Todos</h1>
@@ -39,7 +36,6 @@
         </div>
       <% end %>
 
-      <%# Todos in this list %>
       <div class="todolists">
         <h1>Todos <span>(<%= @todos.select(&:done).count %>/<%= @todos.count %> completed)</span></h1>
         <div id="todos">
@@ -47,7 +43,6 @@
         </div>
       </div>
 
-      <%# New Todo Form %>
       <div class="tool-form">
         <%= form_with model: [@todo_list, @todo_list.todos.new], local: true do |f| %>
           <div class="input-fields">
