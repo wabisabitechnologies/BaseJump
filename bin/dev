@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+echo "==> BaseJump Dev Server"
+echo ""
+echo "  Starting dartsass (SCSS watcher) and Rails server..."
+echo ""
+
+# Start dartsass in background (watches app/assets/stylesheets/)
+bin/rails dartsass:watch &
+DART_PID=$!
+
+# Trap to clean up background processes on exit
+trap "kill $DART_PID 2>/dev/null; exit" SIGINT SIGTERM EXIT
+
+# Start Rails server
+bin/rails server -b 0.0.0.0 -p 3010
+
+# Wait for background processes
+wait
