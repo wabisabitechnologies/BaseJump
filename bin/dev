@@ -1,18 +1,28 @@
 #!/usr/bin/env bash
+# Secrets from Doppler (NeonDB DATABASE_URL etc.)
+# Install: brew install dopplerhq/cli/doppler && doppler setup
 echo "==> BaseJump Dev Server"
 echo ""
-echo "  Starting dartsass (SCSS watcher) and Rails server..."
+
+if command -v doppler &> /dev/null; then
+  echo "  Doppler CLI detected — injecting secrets for project: $(doppler configure --json 2>/dev/null | grep -o '"project":"[^"]*"' | head -1)"
+  EXEC="doppler run --"
+else
+  echo "  Doppler CLI not found — set DATABASE_URL manually or install: brew install dopplerhq/cli/doppler"
+  EXEC=""
+fi
+
 echo ""
 
 # Start dartsass in background (watches app/assets/stylesheets/)
-bin/rails dartsass:watch &
+${EXEC} bin/rails dartsass:watch &
 DART_PID=$!
 
 # Trap to clean up background processes on exit
 trap "kill $DART_PID 2>/dev/null; exit" SIGINT SIGTERM EXIT
 
-# Start Rails server
-bin/rails server -b 0.0.0.0 -p 3010
+# Start Rails server with Doppler secrets
+${EXEC} bin/rails server -b 0.0.0.0 -p 3010
 
 # Wait for background processes
 wait
