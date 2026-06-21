@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  root 'react_app#index'
+  root 'sessions#new'
 
-  get '/home', to: 'react_app#index'
+  get '/home', to: 'pages#home'
 
   resource :session, only: [:new, :create, :destroy]
   resources :users, only: [:new, :create]
@@ -69,6 +69,7 @@ Rails.application.routes.draw do
     get '/projects/:project_id/loose_todos', to: 'todos#index', defaults: { loose: true }
     resources :subtasks, only: [:create, :update, :destroy]
   end
-  # Catch-all: serve React SPA for unrecognized routes (must be last)
-  get '*path', to: 'react_app#index'
+  # React SPA remains addressable for unported features (calendar, kanban, etc.)
+  get '/app', to: 'react_app#index'
+  get '/app/*path', to: 'react_app#index'
 end
