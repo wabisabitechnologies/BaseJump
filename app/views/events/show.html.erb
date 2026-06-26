@@ -1,0 +1,83 @@
+<div class="main-app">
+  <nav class="app-nav">
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="<%= project_path(@project) %>" class="logo" style="margin-left: 5px;">
+        <span><%= @project.name %></span>
+      </a>
+    </div>
+    <div>
+      <span style="font-size: 13px; color: #555;"><%= current_user.name %></span>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
+    </div>
+  </nav>
+
+  <div class="tool-page">
+    <header>
+      <span><%= link_to "← Events", project_events_path(@project) %></span>
+    </header>
+
+    <div class="main-tool">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h1><%= @event.title %></h1>
+          <% if @event.author %>
+            <p style="font-size: 13px; color: #666; margin: 4px 0;">
+              by <%= @event.author.name %>
+            </p>
+          <% end %>
+        </div>
+        <% if @event.author == current_user %>
+          <%= button_to "Delete", event_path(@event), method: :delete,
+              data: { turbo_confirm: "Are you sure?" },
+              class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px; color: #cc0000;" %>
+        <% end %>
+      </div>
+
+      <div style="margin: 16px 0; padding: 12px; background: #f9f9f9; border-radius: 4px;">
+        <p style="margin: 0; font-size: 14px;">
+          <strong>Start:</strong> <%= @event.start_date.strftime("%B %d, %Y") if @event.start_date %>
+        </p>
+        <% if @event.end_date.present? %>
+          <p style="margin: 4px 0 0 0; font-size: 14px;">
+            <strong>End:</strong> <%= @event.end_date.strftime("%B %d, %Y") %>
+          </p>
+        <% end %>
+        <% if @event.video_link.present? %>
+          <p style="margin: 8px 0 0 0;">
+            <%= link_to "📹 Join Video Call", @event.video_link, target: "_blank", style: "color: #007BB6;" %>
+          </p>
+        <% end %>
+      </div>
+
+      <% if @event.description.present? %>
+        <div style="margin: 24px 0; line-height: 1.6; font-size: 15px;">
+          <%= simple_format(@event.description) %>
+        </div>
+      <% end %>
+
+      <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
+
+      <h2>Comments (<%= @comments.count %>)</h2>
+
+      <div id="comments">
+        <% @comments.each do |comment| %>
+          <%= render partial: "comments/comment", locals: { comment: comment } %>
+        <% end %>
+      </div>
+
+      <div class="tool-form" style="margin-top: 24px;">
+        <%= form_with url: event_comments_path(@event), data: { turbo_stream: true } do |f| %>
+          <div class="input-fields">
+            <%= f.text_area :body, placeholder: "Add a comment...", rows: 3, style: "width: 100%; font-family: inherit;" %>
+          </div>
+          <div class="submit-buttons">
+            <%= f.submit "Post Comment", class: "btn btn-submit" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

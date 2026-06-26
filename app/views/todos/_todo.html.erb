@@ -10,6 +10,16 @@
     <% if todo.description.present? %>
       <p style="font-size: 12px; color: #666;"><%= todo.description %></p>
     <% end %>
+    <% if todo.due_date.present? %>
+      <p style="font-size: 11px; color: #007BB6; margin: 2px 0;">Due: <%= todo.due_date.strftime("%b %d, %Y") %></p>
+    <% end %>
+
+    <%# Assignees %>
+    <% if todo.assignees.any? %>
+      <div style="margin-top: 4px; font-size: 12px; color: #666;">
+        Assigned to: <%= todo.assignees.map(&:name).join(", ") %>
+      </div>
+    <% end %>
 
     <%# Subtasks %>
     <% if todo.subtasks.any? %>

@@ -1,0 +1,109 @@
+<div class="main-app">
+  <nav class="app-nav">
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="/home" class="logo" style="margin-left: 5px;">
+        <span>Home</span>
+      </a>
+    </div>
+    <div>
+      <a href="<%= user_path(current_user) %>" style="font-size: 13px; color: #555; text-decoration: none;"><%= current_user.name %></a>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
+    </div>
+  </nav>
+
+  <div class="main-app-content">
+    <h1>Everything</h1>
+
+    <div style="margin-bottom: 20px;">
+      <a href="<%= everything_index_path %>" class="btn btn-normal" style="padding: 5px 10px; font-size: 12px; <%= 'background: #007BB6; color: white;' if params[:filter].blank? %>">All</a>
+      <a href="<%= everything_index_path(filter: 'todos') %>" class="btn btn-normal" style="padding: 5px 10px; font-size: 12px; <%= 'background: #007BB6; color: white;' if params[:filter] == 'todos' %>">Todos</a>
+      <a href="<%= everything_index_path(filter: 'messages') %>" class="btn btn-normal" style="padding: 5px 10px; font-size: 12px; <%= 'background: #007BB6; color: white;' if params[:filter] == 'messages' %>">Messages</a>
+      <a href="<%= everything_index_path(filter: 'events') %>" class="btn btn-normal" style="padding: 5px 10px; font-size: 12px; <%= 'background: #007BB6; color: white;' if params[:filter] == 'events' %>">Events</a>
+    </div>
+
+    <% if @my_todos.any? %>
+      <div class="project-section" style="margin-bottom: 32px;">
+        <span class="project-divider">My Todos (<%= @my_todos.count %>)</span>
+        <div class="todolists">
+          <% @my_todos.each do |todo| %>
+            <div class="todo">
+              <div style="flex: 1;">
+                <span style="font-size: 14px;"><%= todo.title %></span>
+                <% if todo.due_date.present? %>
+                  <span style="font-size: 11px; color: #007BB6; margin-left: 8px;">Due: <%= todo.due_date.strftime("%b %d") %></span>
+                <% end %>
+                <% if todo.todo_list %>
+                  <p style="font-size: 11px; color: #999; margin: 2px 0;">
+                    in <%= todo.todo_list.title %>
+                    <% if todo.todo_list.project %>
+                      · <%= todo.todo_list.project.name %>
+                    <% end %>
+                  </p>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @recent_messages.any? %>
+      <div class="project-section" style="margin-bottom: 32px;">
+        <span class="project-divider">Recent Messages</span>
+        <div class="todolists">
+          <% @recent_messages.each do |message| %>
+            <div class="todo">
+              <div style="flex: 1;">
+                <span style="font-size: 14px;">
+                  <%= link_to message.title, message_path(message), style: "color: #333; text-decoration: none;" %>
+                </span>
+                <span style="font-size: 11px; color: #999; margin-left: 8px;">
+                  <%= time_ago_in_words(message.created_at) %> ago
+                </span>
+                <% if message.project %>
+                  <p style="font-size: 11px; color: #999; margin: 2px 0;">
+                    in <%= message.project.name %>
+                  </p>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @upcoming_events.any? %>
+      <div class="project-section" style="margin-bottom: 32px;">
+        <span class="project-divider">Upcoming Events</span>
+        <div class="todolists">
+          <% @upcoming_events.each do |event| %>
+            <div class="todo">
+              <div style="flex: 1;">
+                <span style="font-size: 14px;">
+                  <%= link_to event.title, event_path(event), style: "color: #333; text-decoration: none;" %>
+                </span>
+                <span style="font-size: 11px; color: #007BB6; margin-left: 8px;">
+                  <%= event.start_date.strftime("%b %d, %Y") %>
+                </span>
+                <% if event.project %>
+                  <p style="font-size: 11px; color: #999; margin: 2px 0;">
+                    in <%= event.project.name %>
+                  </p>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @my_todos.empty? && @recent_messages.empty? && @upcoming_events.empty? %>
+      <div style="text-align: center; padding: 40px; color: #999;">
+        <p>Nothing to show yet. Create some todos, messages, or events!</p>
+      </div>
+    <% end %>
+  </div>
+</div>

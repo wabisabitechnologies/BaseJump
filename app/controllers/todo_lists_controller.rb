@@ -8,8 +8,8 @@ class TodoListsController < ApplicationController
 
   def show
     @todo_list = TodoList.find(params[:id])
-    @todos = @todo_list.todos.includes(:assignees)
-    @loose_todos = Todo.where(todo_list_id: nil, author: current_user)
+    @todos = @todo_list.todos.includes(:assignees, :subtasks)
+    @loose_todos = Todo.where(todo_list_id: nil, author: current_user).includes(:assignees, :subtasks)
     @todo = @todo_list.todos.new
   end
 

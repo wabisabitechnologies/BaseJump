@@ -27,6 +27,26 @@
           <li><%= @todo_lists.count %> lists</li>
         </li>
       </a>
+      <a href="<%= project_messages_path(@project) %>">
+        <li class="tool-card">
+          <h2>Messages</h2>
+          <li><%= @project.messages.count %> messages</li>
+        </li>
+      </a>
+      <a href="<%= project_events_path(@project) %>">
+        <li class="tool-card">
+          <h2>Events</h2>
+          <li><%= @project.events.count %> events</li>
+        </li>
+      </a>
     </ul>
+
+    <div style="margin-top: 20px;">
+      <%= button_to "Save as Template", create_template_path(@project), 
+          method: :post, 
+          class: "btn btn-normal", 
+          style: "font-size: 12px; margin-right: 10px;" %>
+      <%= link_to "View Templates", templates_path, style: "font-size: 12px; color: #007BB6;" %>
+    </div>
   </div>
 </div>

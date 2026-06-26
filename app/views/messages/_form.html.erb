@@ -1,0 +1,11 @@
+<%= form_with model: [project, message], id: "new-message-form", class: "flex gap-2", data: { turbo_stream: true } do |f| %>
+  <div class="input-fields">
+    <%= f.text_field :title, placeholder: "Message title...", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-3 py-2" %>
+  </div>
+  <div class="input-fields">
+    <%= f.text_area :body, placeholder: "Write your message...", rows: 4, style: "width: 100%; font-family: inherit;" %>
+  </div>
+  <div class="submit-buttons">
+    <%= f.submit "Post Message", class: "btn btn-submit" %>
+  </div>
+<% end %>

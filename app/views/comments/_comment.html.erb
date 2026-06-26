@@ -1,0 +1,16 @@
+<div id="<%= dom_id(comment) %>" class="todo" style="margin-bottom: 12px; padding: 12px;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <p style="font-size: 13px; color: #666; margin: 0 0 4px 0;">
+        <strong><%= comment.author&.name || "Unknown" %></strong>
+        <span style="color: #999;">· <%= comment.created_at.strftime("%b %d, %Y %l:%M %p") %></span>
+      </p>
+      <p style="margin: 0; font-size: 14px; line-height: 1.5;"><%= comment.body %></p>
+    </div>
+    <% if comment.author == current_user %>
+      <%= button_to "×", comment_path(comment), method: :delete,
+          data: { turbo_confirm: "Delete comment?" },
+          style: "background: none; border: none; color: #999; cursor: pointer; font-size: 16px; padding: 0 4px;" %>
+    <% end %>
+  </div>
+</div>

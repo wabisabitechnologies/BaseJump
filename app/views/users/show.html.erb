@@ -1,0 +1,69 @@
+<div class="main-app">
+  <nav class="app-nav">
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="/home" class="logo" style="margin-left: 5px;">
+        <span>Home</span>
+      </a>
+    </div>
+    <div>
+      <span style="font-size: 13px; color: #555;"><%= current_user.name %></span>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
+    </div>
+  </nav>
+
+  <div class="tool-page">
+    <header>
+      <span><%= link_to "← Home", home_path %></span>
+    </header>
+
+    <div class="main-tool">
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+        <img src="<%= @user.avatar_url %>" alt="<%= @user.name %>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+        <div>
+          <h1 style="margin: 0;"><%= @user.name %></h1>
+          <p style="margin: 4px 0; color: #666; font-size: 14px;">@<%= @user.username %></p>
+          <% if @user.job_title.present? %>
+            <p style="margin: 4px 0; color: #999; font-size: 13px;"><%= @user.job_title %></p>
+          <% end %>
+          <% if @user.company %>
+            <p style="margin: 4px 0; color: #666; font-size: 13px;"><%= @user.company.name %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
+
+      <h2>Projects (<%= @projects.count %>)</h2>
+      <div class="card-holder" style="margin-bottom: 24px;">
+        <% @projects.each do |project| %>
+          <a href="<%= project_path(project) %>" class="project-card" style="text-decoration: none; color: inherit;">
+            <h3><%= project.name %></h3>
+            <p style="font-size: 12px; color: #666;"><%= project.todo_lists.count %> todo lists</p>
+          </a>
+        <% end %>
+      </div>
+
+      <h2>Assigned Todos (<%= @assigned_todos.count %>)</h2>
+      <div class="todolists">
+        <% @assigned_todos.each do |todo| %>
+          <div class="todo">
+            <div style="flex: 1;">
+              <span style="font-size: 14px;"><%= todo.title %></span>
+              <% if todo.todo_list %>
+                <p style="font-size: 11px; color: #999; margin: 2px 0;">
+                  in <%= todo.todo_list.title %>
+                  <% if todo.todo_list.project %>
+                    · <%= todo.todo_list.project.name %>
+                  <% end %>
+                </p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

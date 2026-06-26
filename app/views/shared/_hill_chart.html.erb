@@ -1,0 +1,31 @@
+<%# Hill Chart Partial %>
+<%# Usage: render partial: "shared/hill_chart", locals: { progress: 50 } %>
+<%# progress: 0-100 percentage %>
+
+<div style="text-align: center; margin: 20px 0;">
+  <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Progress: <%= progress %>%</p>
+  <svg viewBox="0 0 300 160" style="max-width: 300px; width: 100%;">
+    <!-- Hill curve background -->
+    <path d="M 0,150 Q 75,-30 150,15 Q 225,60 300,150" 
+          fill="none" 
+          stroke="#e0e0e0" 
+          stroke-width="3"/>
+    
+    <!-- Filled hill up to progress point -->
+    <path d="M 0,150 Q 75,-30 <%= progress * 1.5 %>,<%= 150 - (2 * progress * (150 - progress) / 150) %>" 
+          fill="none" 
+          stroke="#007BB6" 
+          stroke-width="3"
+          stroke-dasharray="<%= progress * 3 %>, 1000"/>
+    
+    <!-- Progress dot -->
+    <circle cx="<%= progress * 3 %>" 
+            cy="<%= 150 - (2 * progress * (150 - progress) / 150) %>" 
+            r="8" 
+            fill="#007BB6"/>
+    
+    <!-- Labels -->
+    <text x="10" y="165" font-size="10" fill="#999">Figuring it out</text>
+    <text x="220" y="165" font-size="10" fill="#999">Done</text>
+  </svg>
+</div>

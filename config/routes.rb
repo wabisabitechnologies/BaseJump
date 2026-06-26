@@ -2,9 +2,14 @@ Rails.application.routes.draw do
   root 'sessions#new'
 
   get '/home', to: 'pages#home'
+  resources :everything, only: [:index]
+  
+  resources :templates, only: [:index], controller: 'project_templates'
+  post 'templates/:id/create', to: 'project_templates#create', as: :create_template
+  post 'templates/:id/use', to: 'project_templates#use_template', as: :use_template
 
   resource :session, only: [:new, :create, :destroy]
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :show]
 
 
   resources :projects do
@@ -20,7 +25,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :todos, only: [] do
+  resources :todos, only: [:create] do
     patch :toggle, on: :member
     resources :subtasks, only: [:create, :update, :destroy]
   end
@@ -36,6 +41,8 @@ Rails.application.routes.draw do
   resources :todo_lists, only: [] do
     resources :comments, only: [:create, :destroy]
   end
+
+  resources :comments, only: [:destroy]
 
   # JSON API routes for React frontend
   namespace :api do

@@ -1,0 +1,2 @@
+<%= turbo_stream.prepend "messages", partial: "messages/message", locals: { message: @message } %>
+<%= turbo_stream.replace "new-message-form", partial: "messages/form", locals: { project: @project, message: Message.new } %>

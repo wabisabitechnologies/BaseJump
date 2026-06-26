@@ -1,0 +1,335 @@
+#!/usr/bin/env python3
+"""
+Ticket Tracker CLI for BaseJump
+
+Usage:
+    bin/tickets              List all tickets
+    bin/tickets list         List all tickets
+    bin/tickets summary      Show progress stats
+    bin/tickets start <ID>   Mark ticket as in_progress (Next)
+    bin/tickets done <ID>    Mark ticket as completed
+    bin/tickets reset <ID>   Mark ticket as pending
+    bin/tickets note <ID> "text"  Add note to ticket
+    bin/tickets next         Show next ticket to work on
+    bin/tickets <ID>         Show ticket details
+    bin/tickets help         Show help
+"""
+
+import re
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+
+# Paths
+TRACKER = Path("TASKS/TRACKER.md")
+NOTES_DIR = Path("TASKS/NOTES")
+
+# Colors
+class Colors:
+    RED = '\033[0;31m'
+    GREEN = '\033[0;32m'
+    YELLOW = '\033[1;33m'
+    BLUE = '\033[0;34m'
+    CYAN = '\033[0;36m'
+    NC = '\033[0m'
+
+def ensure_dirs():
+    NOTES_DIR.mkdir(parents=True, exist_ok=True)
+
+def read_tracker():
+    if not TRACKER.exists():
+        print(f"{Colors.RED}Error: {TRACKER} not found{Colors.NC}")
+        sys.exit(1)
+    return TRACKER.read_text()
+
+def write_tracker(content):
+    TRACKER.write_text(content)
+
+def parse_tickets(content):
+    """Parse all tickets from tracker markdown."""
+    tickets = []
+    ticket_pattern = re.compile(r'^\|\s*(\S+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.*?)\s*\|$')
+    
+    for line in content.split('\n'):
+        match = ticket_pattern.match(line)
+        if match:
+            ticket_id, name, status, notes = match.groups()
+            # Skip header rows
+            if ticket_id in ('ID', '----'):
+                continue
+            tickets.append({
+                'id': ticket_id,
+                'name': name,
+                'status': status,
+                'notes': notes
+            })
+    return tickets
+
+def get_ticket(content, ticket_id):
+    """Get a specific ticket by ID."""
+    tickets = parse_tickets(content)
+    for t in tickets:
+        if t['id'] == ticket_id:
+            return t
+    return None
+
+def update_ticket_status(ticket_id, new_status):
+    """Update a ticket's status in the tracker."""
+    content = read_tracker()
+    lines = content.split('\n')
+    updated = False
+    
+    for i, line in enumerate(lines):
+        if line.startswith(f'| {ticket_id} ') or line.startswith(f'|  {ticket_id} '):
+            # Replace the status column (3rd column)
+            parts = line.split('|')
+            if len(parts) >= 4:
+                parts[3] = f' {new_status} '
+                lines[i] = '|'.join(parts)
+                updated = True
+                break
+    
+    if updated:
+        write_tracker('\n'.join(lines))
+    return updated
+
+def format_ticket_status(status):
+    """Format status with color."""
+    status = status.strip()
+    if '✅' in status or 'Done' in status:
+        return f"{Colors.GREEN}{status}{Colors.NC}"
+    elif '🔵' in status or 'Next' in status:
+        return f"{Colors.BLUE}{status}{Colors.NC}"
+    elif '⚪' in status or 'Pending' in status:
+        return f"{Colors.YELLOW}{status}{Colors.NC}"
+    elif '❌' in status or 'Blocked' in status:
+        return f"{Colors.RED}{status}{Colors.NC}"
+    return status
+
+def list_tickets():
+    """List all tickets with status."""
+    content = read_tracker()
+    tickets = parse_tickets(content)
+    
+    print()
+    print(f"{Colors.CYAN}═══════════════════════════════════════{Colors.NC}")
+    print(f"{Colors.CYAN}  BaseJump Ticket Tracker{Colors.NC}")
+    print(f"{Colors.CYAN}═══════════════════════════════════════{Colors.NC}")
+    print()
+    
+    current_section = ""
+    for line in content.split('\n'):
+        if line.startswith('## '):
+            current_section = line[3:]
+        
+        if line.startswith('| ID'):
+            continue
+        if line.startswith('|----'):
+            continue
+            
+        match = re.match(r'^\|\s*(\S+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.*?)\s*\|$', line)
+        if match:
+            ticket_id, name, status, notes = match.groups()
+            status_colored = format_ticket_status(status)
+            
+            # Icon based on status
+            if '✅' in status or 'Done' in status:
+                icon = f"{Colors.GREEN}✓{Colors.NC}"
+            elif '🔵' in status or 'Next' in status:
+                icon = f"{Colors.BLUE}→{Colors.NC}"
+            elif '⚪' in status or 'Pending' in status:
+                icon = f"{Colors.YELLOW}·{Colors.NC}"
+            else:
+                icon = "?"
+            
+            print(f"  {icon} {Colors.CYAN}{ticket_id:<10}{Colors.NC} {name:<40} {status_colored}")
+            if notes:
+                print(f"    {'':10} {Colors.NC}{notes}{Colors.NC}")
+    
+    print()
+    summary()
+
+def summary():
+    """Show progress stats."""
+    content = read_tracker()
+    tickets = parse_tickets(content)
+    
+    total = len(tickets)
+    done = sum(1 for t in tickets if '✅' in t['status'] or 'Done' in t['status'])
+    next_count = sum(1 for t in tickets if '🔵' in t['status'] or 'Next' in t['status'])
+    pending = sum(1 for t in tickets if '⚪' in t['status'] or 'Pending' in t['status'])
+    blocked = sum(1 for t in tickets if '❌' in t['status'] or 'Blocked' in t['status'])
+    remaining = total - done
+    pct = (done * 100 // total) if total > 0 else 0
+    
+    print(f"  {Colors.GREEN}Done:     {done}/{total} ({pct}%){Colors.NC}")
+    print(f"  {Colors.BLUE}Next:     {next_count}{Colors.NC}")
+    print(f"  {Colors.YELLOW}Pending:  {pending}{Colors.NC}")
+    if blocked > 0:
+        print(f"  {Colors.RED}Blocked:  {blocked}{Colors.NC}")
+    print(f"  Remaining: {remaining} tickets")
+    print()
+
+def show_ticket(ticket_id):
+    """Show ticket details."""
+    content = read_tracker()
+    ticket = get_ticket(content, ticket_id)
+    
+    if not ticket:
+        print(f"{Colors.RED}Ticket '{ticket_id}' not found{Colors.NC}")
+        return
+    
+    notes_file = NOTES_DIR / f"{ticket_id}.md"
+    
+    print()
+    print(f"{Colors.CYAN}═══════════════════════════════════════{Colors.NC}")
+    print(f"{Colors.CYAN}  Ticket: {ticket_id}{Colors.NC}")
+    print(f"{Colors.CYAN}═══════════════════════════════════════{Colors.NC}")
+    print()
+    print(f"  Status: {format_ticket_status(ticket['status'])}")
+    print(f"  Name:   {ticket['name']}")
+    if ticket['notes']:
+        print(f"  Notes:  {ticket['notes']}")
+    print()
+    
+    # Show detailed notes if file exists
+    if notes_file.exists():
+        print(f"{Colors.YELLOW}  ── Detailed Notes ──{Colors.NC}")
+        print(notes_file.read_text())
+        print()
+    
+    # Show available commands
+    print(f"{Colors.CYAN}  ── Commands ──{Colors.NC}")
+    status = ticket['status']
+    if '✅' not in status and 'Done' not in status:
+        print(f"  bin/tickets start {ticket_id}   Mark as in progress")
+        print(f"  bin/tickets done {ticket_id}    Mark as completed")
+    if '⚪' not in status and 'Pending' not in status:
+        print(f"  bin/tickets reset {ticket_id}   Mark as pending")
+    print(f"  bin/tickets note {ticket_id} \"text\"  Add note")
+    print()
+
+def start_ticket(ticket_id):
+    """Mark ticket as in progress."""
+    if update_ticket_status(ticket_id, "🔵 Next"):
+        print(f"{Colors.GREEN}Ticket {ticket_id} marked as Next{Colors.NC}")
+        show_ticket(ticket_id)
+    else:
+        print(f"{Colors.RED}Ticket '{ticket_id}' not found{Colors.NC}")
+
+def done_ticket(ticket_id):
+    """Mark ticket as completed."""
+    if update_ticket_status(ticket_id, "✅ Done"):
+        print(f"{Colors.GREEN}Ticket {ticket_id} marked as Done! 🎉{Colors.NC}")
+        summary()
+    else:
+        print(f"{Colors.RED}Ticket '{ticket_id}' not found{Colors.NC}")
+
+def reset_ticket(ticket_id):
+    """Mark ticket as pending."""
+    if update_ticket_status(ticket_id, "⚪ Pending"):
+        print(f"{Colors.YELLOW}Ticket {ticket_id} reset to Pending{Colors.NC}")
+        show_ticket(ticket_id)
+    else:
+        print(f"{Colors.RED}Ticket '{ticket_id}' not found{Colors.NC}")
+
+def add_note(ticket_id, note):
+    """Add note to ticket."""
+    notes_file = NOTES_DIR / f"{ticket_id}.md"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    
+    if not notes_file.exists():
+        notes_file.write_text(f"# {ticket_id} Notes\n\n")
+    
+    with open(notes_file, 'a') as f:
+        f.write(f"## {timestamp}\n")
+        f.write(f"{note}\n\n")
+    
+    print(f"{Colors.GREEN}Note added to {ticket_id}{Colors.NC}")
+
+def show_next():
+    """Show next ticket to work on."""
+    content = read_tracker()
+    tickets = parse_tickets(content)
+    
+    # First look for tickets marked as Next
+    for t in tickets:
+        if '🔵' in t['status'] or 'Next' in t['status']:
+            print(f"{Colors.BLUE}Next ticket:{Colors.NC}")
+            show_ticket(t['id'])
+            return
+    
+    # Otherwise find first pending ticket
+    for t in tickets:
+        if '⚪' in t['status'] or 'Pending' in t['status']:
+            print(f"{Colors.YELLOW}No ticket marked as Next. First pending ticket:{Colors.NC}")
+            show_ticket(t['id'])
+            return
+    
+    print(f"{Colors.GREEN}All tickets completed! 🎉{Colors.NC}")
+
+def show_help():
+    """Show help message."""
+    print("""
+Usage: bin/tickets [command] [args]
+
+Commands:
+  (no args)       List all tickets
+  list            List all tickets
+  summary         Show progress stats
+  start <ID>      Mark ticket as in progress (Next)
+  done <ID>       Mark ticket as completed
+  reset <ID>      Mark ticket as pending
+  note <ID> "text" Add note to ticket
+  next            Show next ticket to work on
+  <ID>            Show ticket details
+  help            Show this help
+
+Examples:
+  bin/tickets              # List all tickets
+  bin/tickets start FIX-1  # Start working on FIX-1
+  bin/tickets done FIX-1   # Mark FIX-1 as done
+  bin/tickets note FIX-1 "Dropped local: true from form"
+""")
+
+def main():
+    ensure_dirs()
+    
+    args = sys.argv[1:]
+    command = args[0] if args else 'list'
+    
+    if command == 'help' or command == '-h' or command == '--help':
+        show_help()
+    elif command == 'list' or command == '':
+        list_tickets()
+    elif command == 'summary':
+        summary()
+    elif command == 'start':
+        if len(args) < 2:
+            print(f"{Colors.RED}Usage: bin/tickets start <ID>{Colors.NC}")
+            sys.exit(1)
+        start_ticket(args[1])
+    elif command == 'done':
+        if len(args) < 2:
+            print(f"{Colors.RED}Usage: bin/tickets done <ID>{Colors.NC}")
+            sys.exit(1)
+        done_ticket(args[1])
+    elif command == 'reset':
+        if len(args) < 2:
+            print(f"{Colors.RED}Usage: bin/tickets reset <ID>{Colors.NC}")
+            sys.exit(1)
+        reset_ticket(args[1])
+    elif command == 'note':
+        if len(args) < 3:
+            print(f"{Colors.RED}Usage: bin/tickets note <ID> \"text\"{Colors.NC}")
+            sys.exit(1)
+        add_note(args[1], ' '.join(args[2:]))
+    elif command == 'next':
+        show_next()
+    else:
+        # Assume it's a ticket ID
+        show_ticket(command)
+
+if __name__ == '__main__':
+    main()

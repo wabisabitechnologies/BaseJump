@@ -1,2 +1,5 @@
-<%= turbo_stream.append :todos, partial: "todos/todo", locals: { todo: @todo } %>
-<%= turbo_stream.replace "new-todo-form", partial: "todos/form", locals: { todo_list: @todo.todo_list, todo: Todo.new } %>
+<% if @todo.todo_list_id.present? %>
+  <%= turbo_stream.append :todos, partial: "todos/todo", locals: { todo: @todo } %>
+<% else %>
+  <%= turbo_stream.append "loose-todos", partial: "todos/todo", locals: { todo: @todo } %>
+<% end %>
