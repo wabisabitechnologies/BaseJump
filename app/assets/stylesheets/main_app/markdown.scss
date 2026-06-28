@@ -107,4 +107,15 @@
     text-decoration: line-through;
     color: #999;
   }
+  
+  .wiki-link {
+    color: #007BB6;
+    text-decoration: none;
+    border-bottom: 1px dashed #007BB6;
+    
+    &:hover {
+      text-decoration: none;
+      border-bottom-style: solid;
+    }
+  }
 }

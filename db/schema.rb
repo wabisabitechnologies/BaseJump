@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_27_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_27_000004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,6 +57,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_000003) do
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_messages_on_author_id"
     t.index ["project_id"], name: "index_messages_on_project_id"
+  end
+
+  create_table "note_links", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "source_note_id", null: false
+    t.bigint "target_note_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_note_id", "target_note_id"], name: "index_note_links_on_source_note_id_and_target_note_id", unique: true
+    t.index ["target_note_id"], name: "index_note_links_on_target_note_id"
   end
 
   create_table "notes", force: :cascade do |t|
@@ -187,6 +196,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_000003) do
   add_foreign_key "events", "users", column: "author_id"
   add_foreign_key "messages", "projects"
   add_foreign_key "messages", "users", column: "author_id"
+  add_foreign_key "note_links", "notes", column: "source_note_id"
+  add_foreign_key "note_links", "notes", column: "target_note_id"
   add_foreign_key "notes", "notes", column: "parent_id"
   add_foreign_key "notes", "projects"
   add_foreign_key "notes", "users", column: "author_id"

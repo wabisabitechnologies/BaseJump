@@ -50,10 +50,27 @@
         </div>
       </div>
 
-      <%# Page content %>
+      <%# Page content with wiki links %>
       <div class="markdown-content" style="margin: 24px 0; line-height: 1.6; font-size: 15px;">
-        <%= markdown(@note.body) %>
+        <%= markdown(@note.body_with_links) %>
       </div>
+
+      <%# Backlinks (pages that link to this page) %>
+      <% if @note.backlinked_notes.any? %>
+        <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
+        <h2>Linked from (<%= @note.backlinked_notes.count %>)</h2>
+        <div class="todolists">
+          <% @note.backlinked_notes.each do |backlinked| %>
+            <div class="todo">
+              <div style="flex: 1;">
+                <span style="font-size: 14px;">
+                  <%= link_to backlinked.title, doc_path(backlinked), style: "color: #333; text-decoration: none;" %>
+                </span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
 
       <%# Sub-pages %>
       <% if @children.any? %>
