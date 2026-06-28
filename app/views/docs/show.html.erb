@@ -1,0 +1,106 @@
+<div class="main-app">
+  <nav class="app-nav">
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="<%= project_path(@project) %>" class="logo" style="margin-left: 5px;">
+        <span><%= @project.name %></span>
+      </a>
+    </div>
+    <div>
+      <a href="<%= user_path(current_user) %>" style="font-size: 13px; color: #555; text-decoration: none;"><%= current_user.name %></a>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
+    </div>
+  </nav>
+
+  <div class="tool-page">
+    <header>
+      <span><%= link_to "← Docs", project_docs_path(@project) %></span>
+    </header>
+
+    <div class="main-tool">
+      <%# Breadcrumbs %>
+      <% if @breadcrumbs.any? %>
+        <div style="font-size: 12px; color: #999; margin-bottom: 12px;">
+          <% @breadcrumbs.each do |breadcrumb| %>
+            <%= link_to breadcrumb.title, doc_path(breadcrumb), style: "color: #007BB6; text-decoration: none;" %> / 
+          <% end %>
+          <span><%= @note.title %></span>
+        </div>
+      <% end %>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h1 style="margin: 0;"><%= @note.title %></h1>
+          <% if @note.author %>
+            <p style="font-size: 13px; color: #666; margin: 4px 0;">
+              by <%= @note.author.name %> · <%= @note.created_at.strftime("%B %d, %Y") %>
+              <% if @note.updated_at != @note.created_at %>
+                · Updated <%= time_ago_in_words(@note.updated_at) %> ago
+              <% end %>
+            </p>
+          <% end %>
+        </div>
+        <div>
+          <%= link_to "Edit", edit_doc_path(@note), class: "btn btn-normal", style: "font-size: 12px; margin-right: 8px;" %>
+          <%= button_to "Delete", doc_path(@note), method: :delete,
+              data: { turbo_confirm: "Are you sure? This will delete all sub-pages." },
+              class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px; color: #cc0000;" %>
+        </div>
+      </div>
+
+      <%# Page content %>
+      <div class="markdown-content" style="margin: 24px 0; line-height: 1.6; font-size: 15px;">
+        <%= markdown(@note.body) %>
+      </div>
+
+      <%# Sub-pages %>
+      <% if @children.any? %>
+        <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
+        <h2>Sub-pages (<%= @children.count %>)</h2>
+        <div class="todolists">
+          <% @children.each do |child| %>
+            <div class="todo">
+              <div style="flex: 1;">
+                <span style="font-size: 14px;">
+                  <%= link_to child.title, doc_path(child), style: "color: #333; text-decoration: none;" %>
+                </span>
+                <% if child.author %>
+                  <p style="font-size: 11px; color: #999; margin: 2px 0;">
+                    by <%= child.author.name %>
+                  </p>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div style="margin-top: 16px;">
+        <%= link_to "New Sub-page", new_project_doc_path(@project, parent_id: @note.id), class: "btn btn-normal", style: "font-size: 12px;" %>
+      </div>
+
+      <%# Comments %>
+      <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;">
+      <h2>Comments (<%= @comments.count %>)</h2>
+
+      <div id="comments">
+        <% @comments.each do |comment| %>
+          <%= render partial: "comments/comment", locals: { comment: comment } %>
+        <% end %>
+      </div>
+
+      <div class="tool-form" style="margin-top: 24px;">
+        <%= form_with url: note_comments_path(@note), data: { turbo_stream: true } do |f| %>
+          <div class="input-fields">
+            <%= f.text_area :body, placeholder: "Add a comment...", rows: 3, style: "width: 100%; font-family: inherit;" %>
+          </div>
+          <div class="submit-buttons">
+            <%= f.submit "Post Comment", class: "btn btn-submit" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

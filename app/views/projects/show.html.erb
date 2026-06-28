@@ -39,6 +39,12 @@
           <li><%= @project.events.count %> events</li>
         </li>
       </a>
+      <a href="<%= project_docs_path(@project) %>">
+        <li class="tool-card">
+          <h2>Docs</h2>
+          <li><%= @project.notes.count %> pages</li>
+        </li>
+      </a>
     </ul>
 
     <div style="margin-top: 20px;">

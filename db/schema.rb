@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_27_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_27_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,6 +57,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_000002) do
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_messages_on_author_id"
     t.index ["project_id"], name: "index_messages_on_project_id"
+  end
+
+  create_table "notes", force: :cascade do |t|
+    t.bigint "author_id"
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.bigint "parent_id"
+    t.integer "position", default: 0
+    t.bigint "project_id"
+    t.boolean "published", default: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_notes_on_author_id"
+    t.index ["parent_id"], name: "index_notes_on_parent_id"
+    t.index ["project_id", "parent_id"], name: "index_notes_on_project_id_and_parent_id"
+    t.index ["project_id", "position"], name: "index_notes_on_project_id_and_position"
+    t.index ["project_id"], name: "index_notes_on_project_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -170,6 +187,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_000002) do
   add_foreign_key "events", "users", column: "author_id"
   add_foreign_key "messages", "projects"
   add_foreign_key "messages", "users", column: "author_id"
+  add_foreign_key "notes", "notes", column: "parent_id"
+  add_foreign_key "notes", "projects"
+  add_foreign_key "notes", "users", column: "author_id"
   add_foreign_key "projects", "companies"
   add_foreign_key "projects", "users", column: "admin_id"
   add_foreign_key "subtasks", "todos", column: "parent_todo_id"

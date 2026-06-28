@@ -60,7 +60,7 @@ Auto-generated progress tracker. Use `bin/tickets` to update.
 
 | ID | Ticket | Status | Notes |
 |----|--------|--------|-------|
-| P4-01 | Docs/Pages | ⚪ Pending | Polymorphic notes, TipTap editor |
+| P4-01 | Docs/Pages | ✅ Done | Polymorphic notes, TipTap editor |
 | P4-02 | Bi-Directional Linking | ⚪ Pending | `[[` auto-complete, backlinks |
 | P4-03 | Tag System | ✅ Done | Tags, taggings, filtering |
 | P4-04 | Graph Visualization | ⚪ Pending | D3.js force-directed graph |

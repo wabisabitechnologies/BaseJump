@@ -1,0 +1,6 @@
+<%= turbo_stream.remove dom_id(@note) %>
+<%= turbo_stream.replace "flash" do %>
+  <div id="flash" style="padding: 12px; background: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 16px;">
+    Page deleted.
+  </div>
+<% end %>

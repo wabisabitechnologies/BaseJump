@@ -1,0 +1,5 @@
+<%= turbo_stream.replace dom_id(@note) do %>
+  <div class="markdown-content" style="margin: 24px 0; line-height: 1.6; font-size: 15px;">
+    <%= markdown(@note.body) %>
+  </div>
+<% end %>

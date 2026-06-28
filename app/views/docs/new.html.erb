@@ -1,0 +1,68 @@
+<div class="main-app">
+  <nav class="app-nav">
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="<%= project_path(@project) %>" class="logo" style="margin-left: 5px;">
+        <span><%= @project.name %></span>
+      </a>
+    </div>
+    <div>
+      <a href="<%= user_path(current_user) %>" style="font-size: 13px; color: #555; text-decoration: none;"><%= current_user.name %></a>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
+    </div>
+  </nav>
+
+  <div class="tool-page">
+    <header>
+      <span><%= link_to "← Docs", project_docs_path(@project) %></span>
+    </header>
+
+    <div class="main-tool">
+      <h1><%= @parent ? "New Sub-page" : "New Page" %></h1>
+      
+      <% if @parent %>
+        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">
+          Parent: <%= link_to @parent.title, doc_path(@parent), style: "color: #007BB6;" %>
+        </p>
+      <% end %>
+
+      <%= form_with model: [@project, @note] do |f| %>
+        <% if @note.errors.any? %>
+          <div style="color: #cc0000; margin-bottom: 16px;">
+            <p><%= @note.errors.count %> error(s) prevented this page from being saved:</p>
+            <ul>
+              <% @note.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <%= f.hidden_field :parent_id %>
+
+        <div class="input-fields" style="margin-bottom: 16px;">
+          <%= f.label :title, style: "display: block; font-weight: 600; margin-bottom: 4px;" %>
+          <%= f.text_field :title, placeholder: "Page title...", style: "width: 100%; padding: 8px; font-size: 16px;" %>
+        </div>
+
+        <div class="input-fields" style="margin-bottom: 16px;">
+          <%= f.label :body, "Content (Markdown supported)", style: "display: block; font-weight: 600; margin-bottom: 4px;" %>
+          <%= f.text_area :body, placeholder: "Write your page content...\n\nSupports **bold**, *italic*, `code`, tables, and more.", 
+              rows: 15, style: "width: 100%; padding: 8px; font-family: monospace; font-size: 14px;" %>
+        </div>
+
+        <div class="input-fields" style="margin-bottom: 16px;">
+          <%= f.check_box :published %>
+          <%= f.label :published, "Published", style: "margin-left: 8px;" %>
+        </div>
+
+        <div class="submit-buttons">
+          <%= f.submit "Create Page", class: "btn btn-submit" %>
+          <%= link_to "Cancel", project_docs_path(@project), class: "btn btn-normal", style: "margin-left: 8px;" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

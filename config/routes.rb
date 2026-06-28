@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :messages
     resources :events
     resources :card_tables
+    resources :docs, controller: 'docs'
   end
 
   resources :todo_lists do
@@ -50,6 +51,10 @@ Rails.application.routes.draw do
   end
 
   resources :todo_lists, only: [] do
+    resources :comments, only: [:create, :destroy]
+  end
+
+  resources :notes, only: [] do
     resources :comments, only: [:create, :destroy]
   end
 
