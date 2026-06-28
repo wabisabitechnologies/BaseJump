@@ -1,0 +1,8 @@
+<%= turbo_stream.append "tags" do %>
+  <div id="<%= dom_id(@tag) %>" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: <%= @tag.color || '#007BB6' %>; color: white; border-radius: 16px; font-size: 13px;">
+    <span><%= @tag.name %></span>
+    <%= button_to "×", tag_path(@tag), method: :delete,
+        data: { turbo_confirm: "Delete tag?" },
+        style: "background: none; border: none; color: white; cursor: pointer; font-size: 14px; padding: 0; line-height: 1;" %>
+  </div>
+<% end %>

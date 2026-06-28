@@ -3,10 +3,21 @@ Rails.application.routes.draw do
 
   get '/home', to: 'pages#home'
   resources :everything, only: [:index]
+  get 'search', to: 'search#index', as: :search
   
   resources :templates, only: [:index], controller: 'project_templates'
   post 'templates/:id/create', to: 'project_templates#create', as: :create_template
   post 'templates/:id/use', to: 'project_templates#use_template', as: :use_template
+  
+  resources :tags, only: [:index, :create, :destroy]
+  
+  # Tagging routes
+  post 'messages/:message_id/tags', to: 'tags#tag_item', as: :tag_message
+  delete 'messages/:message_id/tags/:tag_id', to: 'tags#untag_item', as: :untag_message
+  post 'todos/:todo_id/tags', to: 'tags#tag_item', as: :tag_todo
+  delete 'todos/:todo_id/tags/:tag_id', to: 'tags#untag_item', as: :untag_todo
+  post 'events/:event_id/tags', to: 'tags#tag_item', as: :tag_event
+  delete 'events/:event_id/tags/:tag_id', to: 'tags#untag_item', as: :untag_event
 
   resource :session, only: [:new, :create, :destroy]
   resources :users, only: [:new, :create, :show]

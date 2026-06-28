@@ -1,0 +1,73 @@
+<div class="main-app">
+  <nav class="app-nav">
+    <div style="display: flex; align-items: center;">
+      <a href="/home" class="logo">
+        <img src="https://res.cloudinary.com/basejump/image/upload/v1580630789/basecamp-logo-mini.png" alt="Home" />
+      </a>
+      <a href="/home" class="logo" style="margin-left: 5px;">
+        <span>Home</span>
+      </a>
+    </div>
+    <div>
+      <a href="<%= user_path(current_user) %>" style="font-size: 13px; color: #555; text-decoration: none;"><%= current_user.name %></a>
+      <%= button_to "Logout", session_path, method: :delete, class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px;" %>
+    </div>
+  </nav>
+
+  <div class="main-app-content">
+    <h1>Search</h1>
+
+    <div class="tool-form" style="max-width: 500px; margin: 20px auto;">
+      <%= form_tag search_path, method: :get do %>
+        <div class="input-fields" style="display: flex; gap: 8px;">
+          <%= text_field_tag :q, @query, placeholder: "Search messages, todos...", style: "flex: 1;", autofocus: true %>
+          <%= submit_tag "Search", class: "btn btn-submit" %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @query.present? %>
+      <div style="margin-top: 24px;">
+        <% if @messages.any? %>
+          <h2 style="color: #007BB6; margin-bottom: 12px;">Messages (<%= @messages.count %>)</h2>
+          <div class="todolists" style="margin-bottom: 24px;">
+            <% @messages.each do |message| %>
+              <div class="todo">
+                <div style="flex: 1;">
+                  <span style="font-size: 14px;">
+                    <%= link_to message.title, message_path(message), style: "color: #333; text-decoration: none;" %>
+                  </span>
+                  <% if message.project %>
+                    <p style="font-size: 11px; color: #999; margin: 2px 0;">in <%= message.project.name %></p>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if @todos.any? %>
+          <h2 style="color: #007BB6; margin-bottom: 12px;">Todos (<%= @todos.count %>)</h2>
+          <div class="todolists" style="margin-bottom: 24px;">
+            <% @todos.each do |todo| %>
+              <div class="todo">
+                <div style="flex: 1;">
+                  <span style="font-size: 14px;"><%= todo.title %></span>
+                  <% if todo.todo_list %>
+                    <p style="font-size: 11px; color: #999; margin: 2px 0;">in <%= todo.todo_list.title %></p>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if @messages.empty? && @todos.empty? %>
+          <div style="text-align: center; padding: 40px; color: #999;">
+            <p>No results found for "<%= @query %>"</p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

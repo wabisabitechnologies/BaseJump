@@ -5,7 +5,7 @@
         <strong><%= comment.author&.name || "Unknown" %></strong>
         <span style="color: #999;">· <%= comment.created_at.strftime("%b %d, %Y %l:%M %p") %></span>
       </p>
-      <p style="margin: 0; font-size: 14px; line-height: 1.5;"><%= comment.body %></p>
+      <div style="margin: 0; font-size: 14px; line-height: 1.5;"><%= markdown(comment.body) %></div>
     </div>
     <% if comment.author == current_user %>
       <%= button_to "×", comment_path(comment), method: :delete,

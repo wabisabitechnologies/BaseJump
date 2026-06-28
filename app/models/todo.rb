@@ -1,4 +1,6 @@
 class Todo < ApplicationRecord
+  include PgSearch::Model
+  
   normalizes :title, with: ->(title) { title.strip }
 
   validates :title, :author_id, presence: true
@@ -11,10 +13,20 @@ class Todo < ApplicationRecord
   has_many :assignees, through: :user_todos, source: :user
   has_many :subtasks, dependent: :destroy, foreign_key: :parent_todo_id, inverse_of: :parent_todo
   has_one :project, through: :todo_list
+  has_many :taggings, as: :taggable, dependent: :destroy
+  has_many :tags, through: :taggings
 
   scope :loose, -> { where(todo_list_id: nil) }
   scope :done, -> { where(done: true) }
   scope :not_done, -> { where(done: false) }
+  scope :tagged_with, ->(tag_name) { joins(taggings: :tag).where(tags: { name: tag_name.downcase }) }
+
+  pg_search_scope :search,
+    against: [:title, :description],
+    using: {
+      tsearch: { dictionary: "english", prefix: true },
+      trigram: { threshold: 0.3 }
+    }
 
   def toggle_status
     update(done: !done)

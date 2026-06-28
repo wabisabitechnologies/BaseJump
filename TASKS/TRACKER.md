@@ -54,7 +54,7 @@ Auto-generated progress tracker. Use `bin/tickets` to update.
 | P3-03 | Card Tables (Kanban) | ⚪ Pending | Drag-drop columns, card CRUD |
 | P3-04 | Project Templates | ✅ Done | Save/create from template |
 | P3-05 | Everything Page & My Bar | ✅ Done | Cross-project view, sidebar |
-| P3-06 | Markdown Support & Tables | ⚪ Pending | Markdown input, preview toggle |
+| P3-06 | Markdown Support & Tables | ✅ Done | Markdown input, preview toggle |
 
 ## Phase 4: Knowledge Graph
 
@@ -62,9 +62,9 @@ Auto-generated progress tracker. Use `bin/tickets` to update.
 |----|--------|--------|-------|
 | P4-01 | Docs/Pages | ⚪ Pending | Polymorphic notes, TipTap editor |
 | P4-02 | Bi-Directional Linking | ⚪ Pending | `[[` auto-complete, backlinks |
-| P4-03 | Tag System | ⚪ Pending | Tags, taggings, filtering |
+| P4-03 | Tag System | ✅ Done | Tags, taggings, filtering |
 | P4-04 | Graph Visualization | ⚪ Pending | D3.js force-directed graph |
-| P4-05 | Full-Text Search | ⚪ Pending | pg_search, CMD+K modal |
+| P4-05 | Full-Text Search | ✅ Done | pg_search, CMD+K modal |
 
 ## Phase 5: Polish & Deploy
 

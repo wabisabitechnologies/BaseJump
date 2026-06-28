@@ -13,6 +13,8 @@ gem 'jbuilder', '~> 2.0'
 gem 'redis', '~> 4.0'
 gem 'bcrypt', '~> 3.1.7'
 gem 'image_processing', '~> 1.2'
+gem 'redcarpet', '~> 3.6'
+gem 'pg_search', '~> 2.3'
 
 group :development, :test do
   gem 'debug', platforms: %i[ mri mingw x64_mingw ]
