@@ -35,9 +35,9 @@ Auto-generated progress tracker. Use `bin/tickets` to update.
 
 | ID | Ticket | Status | Notes |
 |----|--------|--------|-------|
-| P1-02 | Port Database Schema | ✅ Done | All 10 tables exist |
-| P1-03 | Core Models | ✅ Done | 12 models with associations |
-| P1-04 | Authentication & Session Flow | ✅ Done | Custom bcrypt auth |
+| P1-02 | Port Database Schema | ✅ Done | All tables exist |
+| P1-03 | Core Models | ✅ Done | 12+ models with associations |
+| P1-04 | Authentication & Session Flow | ✅ Done | Custom bcrypt auth, rate limiting |
 | P1-05 | Loose Todos & Subtasks | ✅ Done | Drag-drop Stimulus controller, subtask checklist UI |
 
 ## Phase 2: Core Feature Parity
@@ -49,37 +49,37 @@ Auto-generated progress tracker. Use `bin/tickets` to update.
 | P2-03 | Todo System with Assignments | ✅ Done | UserTodo join, reordering, due dates |
 | P2-04 | Events & Calendar | ✅ Done | Calendar view, event CRUD, port from React |
 | P2-05 | User Management & Company HQ | ✅ Done | Profile page, project membership |
-| P2-06 | Tailwind v3 Integration | ⚪ Pending | Optional, after core parity |
+| P2-06 | Tailwind v3 Integration | 🔶 Partial | Tailwind v4 installed for React/frontend only. Rails views still use SCSS via dartsass-rails. 31 SCSS files untouched. |
 
 ## Phase 3: Modern Features
 
 | ID | Ticket | Status | Notes |
 |----|--------|--------|-------|
-| P3-01 | References Feature | ⚪ Pending | Auto-detect links, `[[` mentions |
+| P3-01 | References Feature | 🔶 Partial | Note-specific wiki-linking exists (NoteLink model, [[syntax]] parsing). No general-purpose Reference model, no auto-detect across content types, no controller. |
 | P3-02 | Hill Charts | ✅ Done | SVG visualization, progress tracking |
-| P3-03 | Card Tables (Kanban) | ⚪ Pending | Drag-drop columns, card CRUD |
+| P3-03 | Card Tables (Kanban) | 🔶 Stub Only | Route stub exists. No model, controller, views, migration, or drag-drop implementation. |
 | P3-04 | Project Templates | ✅ Done | Save/create from template |
 | P3-05 | Everything Page & My Bar | ✅ Done | Cross-project view, sidebar |
-| P3-06 | Markdown Support & Tables | ✅ Done | Markdown input, preview toggle |
+| P3-06 | Markdown Support & Tables | ✅ Done | Markdown input, preview toggle, redcarpet gem |
 
 ## Phase 4: Knowledge Graph
 
 | ID | Ticket | Status | Notes |
 |----|--------|--------|-------|
-| P4-01 | Docs/Pages | ✅ Done | Polymorphic notes, TipTap editor |
-| P4-02 | Bi-Directional Linking | ✅ Done | `[[` auto-complete, backlinks |
-| P4-03 | Tag System | ✅ Done | Tags, taggings, filtering |
-| P4-04 | Graph Visualization | ⚪ Pending | D3.js force-directed graph |
-| P4-05 | Full-Text Search | ✅ Done | pg_search, CMD+K modal |
+| P4-01 | Docs/Pages | ✅ Done | Polymorphic Note model, wiki-link parsing, breadcrumbs |
+| P4-02 | Bi-Directional Linking | ✅ Done | NoteLink model, [[auto-complete]], backlinks, reverse link creation |
+| P4-03 | Tag System | ✅ Done | Tags, taggings, color picker, filtering |
+| P4-04 | Graph Visualization | ⚪ Not Started | No code exists. Needs D3.js force-directed graph or similar. |
+| P4-05 | Full-Text Search | ✅ Done | pg_search with pg_trgm, CMD+K search controller |
 
 ## Phase 5: Polish & Deploy
 
 | ID | Ticket | Status | Notes |
 |----|--------|--------|-------|
-| P5-01 | Performance & Optimization | ✅ Done | N+1 queries, indexes, Turbo batching |
+| P5-01 | Performance & Optimization | ✅ Done | Eager loading, N+1 fixes, indexes |
 | P5-02 | Mobile Responsiveness | ✅ Done | Responsive layouts, touch drag-drop |
-| P5-03 | Authentication & Security | ✅ Done | 2FA, rate limiting, secure headers |
-| P5-04 | Deploy to Production | ⚪ Pending | Kamal, Dockerfile, monitoring |
+| P5-03 | Authentication & Security | ✅ Done | Rate limiting, secure session tokens |
+| P5-04 | Deploy to Production | ⚪ Not Started | No Dockerfile, no Kamal config, no deployment scripts. |
 
 ## Quick Fixes
 
