@@ -61,7 +61,7 @@ class Note < ApplicationRecord
     extract_wiki_links.each do |title|
       linked_note = Note.find_by(title: title)
       if linked_note
-        replacement = "<a href=\"/docs/#{linked_note.id}\" class=\"wiki-link\">#{title}</a>"
+        replacement = "<a href=\"/projects/#{linked_note.project_id}/docs/#{linked_note.id}\" class=\"wiki-link\">#{title}</a>"
         result.gsub!("[[#{title}]]", replacement)
       end
     end

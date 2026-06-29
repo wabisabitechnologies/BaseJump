@@ -8,7 +8,6 @@ class TodoList < ApplicationRecord
 
   has_many :todos, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
-  has_many :references, dependent: :destroy, class_name: 'Reference'
 
   def loose_todos
     todos.where(todo_list_id: nil)

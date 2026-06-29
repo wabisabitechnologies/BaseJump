@@ -7,9 +7,15 @@ Auto-generated progress tracker. Use `bin/tickets` to update.
 ## Summary
 
 - **Total:** 33 tickets
-- **Done:** 11 (33%)
-- **Remaining:** 22
+- **Done:** 28 (85%)
+- **Remaining:** 5
 - **Next:** None (use `bin/tickets start <ID>` to set)
+
+### Test Suite
+- **Model Specs:** 86 examples, 0 failures
+- **Request Specs:** 34 examples, 0 failures
+- **System Specs:** 12 examples, 0 failures
+- **Total:** 132 examples, 0 failures
 
 ---
 

@@ -16,7 +16,7 @@
 
   <div class="tool-page">
     <header>
-      <span><%= link_to "← #{@note.title}", doc_path(@note) %></span>
+      <span><%= link_to "← #{@note.title}", project_doc_path(@project, @note) %></span>
     </header>
 
     <div class="main-tool">
@@ -52,7 +52,7 @@
 
         <div class="submit-buttons">
           <%= f.submit "Update Page", class: "btn btn-submit" %>
-          <%= link_to "Cancel", doc_path(@note), class: "btn btn-normal", style: "margin-left: 8px;" %>
+          <%= link_to "Cancel", project_doc_path(@project, @note), class: "btn btn-normal", style: "margin-left: 8px;" %>
         </div>
       <% end %>
     </div>

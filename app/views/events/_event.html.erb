@@ -2,10 +2,10 @@
   <div style="flex: 1;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <h3 style="margin: 0; font-size: 17px;">
-        <%= link_to event.title, event_path(event), style: "color: #333; text-decoration: none;" %>
+        <%= link_to event.title, project_event_path(event.project, event), style: "color: #333; text-decoration: none;" %>
       </h3>
       <span style="font-size: 12px; color: #999;">
-        <%= event.start_date.strftime("%b %d, %Y") if event.start_date %>
+        <%= Date.parse(event.start_date.to_s).strftime("%b %d, %Y") rescue event.start_date %>
       </span>
     </div>
     <% if event.author %>

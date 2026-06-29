@@ -35,7 +35,7 @@
               <div class="todo">
                 <div style="flex: 1;">
                   <span style="font-size: 14px;">
-                    <%= link_to message.title, message_path(message), style: "color: #333; text-decoration: none;" %>
+                    <%= link_to message.title, project_message_path(message.project, message), style: "color: #333; text-decoration: none;" %>
                   </span>
                   <% if message.project %>
                     <p style="font-size: 11px; color: #999; margin: 2px 0;">in <%= message.project.name %></p>

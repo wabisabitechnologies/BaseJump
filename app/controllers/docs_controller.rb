@@ -29,7 +29,7 @@ class DocsController < ApplicationController
 
     if @note.save
       respond_to do |format|
-        format.html { redirect_to doc_path(@note), notice: "Page created." }
+        format.html { redirect_to project_doc_path(@project, @note), notice: "Page created." }
         format.turbo_stream
       end
     else
@@ -49,7 +49,7 @@ class DocsController < ApplicationController
 
     if @note.update(note_params)
       respond_to do |format|
-        format.html { redirect_to doc_path(@note), notice: "Page updated." }
+        format.html { redirect_to project_doc_path(@project, @note), notice: "Page updated." }
         format.turbo_stream
       end
     else

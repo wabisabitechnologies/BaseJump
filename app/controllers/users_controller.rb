@@ -15,22 +15,22 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.company_name = params[:user][:company_name]
 
-    if @user.save
-      # Create company if company_name is provided
-      if params[:user][:company_name].present?
-        company = Company.create!(name: params[:user][:company_name])
-        @user.update(company: company)
-      end
+    # Create company first if company_name provided
+    if params[:user][:company_name].present?
+      company = Company.create!(name: params[:user][:company_name])
+      @user.company = company
+    end
 
+    if @user.save
       # Create Company HQ project
-      company_hq = @user.company&.projects&.create!(
-        name: "Company HQ",
-        description: "Welcome to your company!",
-        project_type: "company",
-        admin: @user
-      )
-      
-      if company_hq
+      if @user.company
+        company_hq = @user.company.projects.create!(
+          name: "Company HQ",
+          description: "Welcome to your company!",
+          project_type: "company",
+          admin: @user
+        )
+        
         UserProject.create(user: @user, project: company_hq)
       end
 

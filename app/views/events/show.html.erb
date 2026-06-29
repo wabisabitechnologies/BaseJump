@@ -30,7 +30,7 @@
           <% end %>
         </div>
         <% if @event.author == current_user %>
-          <%= button_to "Delete", event_path(@event), method: :delete,
+          <%= button_to "Delete", project_event_path(@project, @event), method: :delete,
               data: { turbo_confirm: "Are you sure?" },
               class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px; color: #cc0000;" %>
         <% end %>

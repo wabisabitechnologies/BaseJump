@@ -14,6 +14,7 @@ class Project < ApplicationRecord
   has_many :todos, through: :todo_lists
   has_many :events, dependent: :destroy
   has_many :messages, dependent: :destroy
+  has_many :notes, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   scope :company_hq, -> { where(project_type: 'company') }

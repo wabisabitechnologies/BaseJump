@@ -6,6 +6,4 @@ class Comment < ApplicationRecord
 
   belongs_to :author, class_name: :User, optional: true
   belongs_to :commentable, polymorphic: true, optional: true
-
-  has_many :references, dependent: :destroy, class_name: 'Reference'
 end

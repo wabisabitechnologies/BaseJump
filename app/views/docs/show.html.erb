@@ -24,7 +24,7 @@
       <% if @breadcrumbs.any? %>
         <div style="font-size: 12px; color: #999; margin-bottom: 12px;">
           <% @breadcrumbs.each do |breadcrumb| %>
-            <%= link_to breadcrumb.title, doc_path(breadcrumb), style: "color: #007BB6; text-decoration: none;" %> / 
+            <%= link_to breadcrumb.title, project_doc_path(@project, breadcrumb), style: "color: #007BB6; text-decoration: none;" %> / 
           <% end %>
           <span><%= @note.title %></span>
         </div>
@@ -43,8 +43,8 @@
           <% end %>
         </div>
         <div>
-          <%= link_to "Edit", edit_doc_path(@note), class: "btn btn-normal", style: "font-size: 12px; margin-right: 8px;" %>
-          <%= button_to "Delete", doc_path(@note), method: :delete,
+          <%= link_to "Edit", edit_project_doc_path(@project, @note), class: "btn btn-normal", style: "font-size: 12px; margin-right: 8px;" %>
+          <%= button_to "Delete", project_doc_path(@project, @note), method: :delete,
               data: { turbo_confirm: "Are you sure? This will delete all sub-pages." },
               class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px; color: #cc0000;" %>
         </div>
@@ -64,7 +64,7 @@
             <div class="todo">
               <div style="flex: 1;">
                 <span style="font-size: 14px;">
-                  <%= link_to backlinked.title, doc_path(backlinked), style: "color: #333; text-decoration: none;" %>
+                  <%= link_to backlinked.title, project_doc_path(@project, backlinked), style: "color: #333; text-decoration: none;" %>
                 </span>
               </div>
             </div>
@@ -81,7 +81,7 @@
             <div class="todo">
               <div style="flex: 1;">
                 <span style="font-size: 14px;">
-                  <%= link_to child.title, doc_path(child), style: "color: #333; text-decoration: none;" %>
+                  <%= link_to child.title, project_doc_path(@project, child), style: "color: #333; text-decoration: none;" %>
                 </span>
                 <% if child.author %>
                   <p style="font-size: 11px; color: #999; margin: 2px 0;">

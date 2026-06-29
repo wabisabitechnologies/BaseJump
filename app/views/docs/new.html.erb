@@ -24,7 +24,7 @@
       
       <% if @parent %>
         <p style="font-size: 13px; color: #666; margin-bottom: 16px;">
-          Parent: <%= link_to @parent.title, doc_path(@parent), style: "color: #007BB6;" %>
+          Parent: <%= link_to @parent.title, project_doc_path(@project, @parent), style: "color: #007BB6;" %>
         </p>
       <% end %>
 

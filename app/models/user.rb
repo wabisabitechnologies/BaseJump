@@ -45,6 +45,7 @@ class User < ApplicationRecord
 
   def ensure_avatar
     return if avatar_url.present?
-    self.avatar_url = "https://placehold.co/500x500?text=#{name.first}&font=roboto"
+    initial = name.present? ? name.first.upcase : "U"
+    self.avatar_url = "https://placehold.co/500x500?text=#{initial}&font=roboto"
   end
 end

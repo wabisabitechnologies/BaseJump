@@ -7,7 +7,6 @@ class Event < ApplicationRecord
   belongs_to :author, class_name: :User, optional: true
   belongs_to :project, optional: true
   has_many :comments, as: :commentable, dependent: :destroy
-  has_many :references, dependent: :destroy, class_name: 'Reference'
 
   def start_datetime
     return nil unless start_date.present?

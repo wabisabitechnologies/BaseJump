@@ -1,4 +1,6 @@
 class NoteLink < ApplicationRecord
+  attr_accessor :skip_callbacks
+
   belongs_to :source_note, class_name: :Note
   belongs_to :target_note, class_name: :Note
 
@@ -26,16 +28,17 @@ class NoteLink < ApplicationRecord
 
   def create_reverse_link
     unless NoteLink.exists?(source_note_id: target_note_id, target_note_id: source_note_id)
-      NoteLink.create(
+      link = NoteLink.new(
         source_note_id: target_note_id,
         target_note_id: source_note_id,
         skip_callbacks: true
       )
+      link.save(validate: false)
     end
   end
 
   def destroy_reverse_link
-    unless skip_callbacks?
+    unless skip_callbacks
       NoteLink.where(source_note_id: target_note_id, target_note_id: source_note_id).destroy_all
     end
   end

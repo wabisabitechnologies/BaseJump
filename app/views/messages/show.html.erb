@@ -30,7 +30,7 @@
           <% end %>
         </div>
         <% if @message.author == current_user %>
-          <%= button_to "Delete", message_path(@message), method: :delete, 
+          <%= button_to "Delete", project_message_path(@project, @message), method: :delete, 
               data: { turbo_confirm: "Are you sure?" }, 
               class: "btn btn-normal", style: "padding: 5px 10px; font-size: 12px; color: #cc0000;" %>
         <% end %>

@@ -18,6 +18,12 @@
 
     <%= f.label :username %>
     <%= f.text_field :username, placeholder: "johndoe" %>
+
+    <div class="field">
+      <label for="user_company_name">Company Name</label>
+      <input type="text" name="user[company_name]" id="user_company_name" placeholder="Acme Inc.">
+    </div>
+
     <%= f.label :password %>
     <%= f.password_field :password %>
     <%= f.label :password_confirmation, "Confirm Password" %>

@@ -2,7 +2,7 @@
   <div style="flex: 1;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <h3 style="margin: 0; font-size: 17px;">
-        <%= link_to message.title, message_path(message), style: "color: #333; text-decoration: none;" %>
+        <%= link_to message.title, project_message_path(message.project, message), style: "color: #333; text-decoration: none;" %>
       </h3>
       <span style="font-size: 12px; color: #999;">
         <%= message.created_at.strftime("%b %d, %Y %l:%M %p") %>
@@ -17,7 +17,7 @@
       <%= truncate(message.body, length: 200) %>
     </p>
     <div style="margin-top: 8px;">
-      <%= link_to "Read more →", message_path(message), style: "font-size: 12px; color: #007BB6;" %>
+      <%= link_to "Read more →", project_message_path(message.project, message), style: "font-size: 12px; color: #007BB6;" %>
     </div>
   </div>
 </div>

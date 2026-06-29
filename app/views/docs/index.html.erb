@@ -32,7 +32,7 @@
               <div class="todo" style="margin-bottom: 12px;">
                 <div style="flex: 1;">
                   <span style="font-size: 17px;">
-                    <%= link_to note.title, doc_path(note), style: "color: #333; text-decoration: none;" %>
+                    <%= link_to note.title, project_doc_path(@project, note), style: "color: #333; text-decoration: none;" %>
                   </span>
                   <% if note.author %>
                     <p style="font-size: 11px; color: #999; margin: 2px 0;">

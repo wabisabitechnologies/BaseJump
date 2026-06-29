@@ -58,7 +58,7 @@
             <div class="todo">
               <div style="flex: 1;">
                 <span style="font-size: 14px;">
-                  <%= link_to message.title, message_path(message), style: "color: #333; text-decoration: none;" %>
+                  <%= link_to message.title, project_message_path(message.project, message), style: "color: #333; text-decoration: none;" %>
                 </span>
                 <span style="font-size: 11px; color: #999; margin-left: 8px;">
                   <%= time_ago_in_words(message.created_at) %> ago
@@ -83,7 +83,7 @@
             <div class="todo">
               <div style="flex: 1;">
                 <span style="font-size: 14px;">
-                  <%= link_to event.title, event_path(event), style: "color: #333; text-decoration: none;" %>
+                  <%= link_to event.title, project_event_path(event.project, event), style: "color: #333; text-decoration: none;" %>
                 </span>
                 <span style="font-size: 11px; color: #007BB6; margin-left: 8px;">
                   <%= event.start_date.strftime("%b %d, %Y") %>
